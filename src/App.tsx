@@ -797,7 +797,7 @@ const AuthModal = ({
             .single();
 
           if (profileError || !profile) {
-            throw new Error('User not found with this username.');
+            throw new Error(t.auth.userNotFound);
           }
           loginEmail = profile.email;
         }
@@ -810,7 +810,7 @@ const AuthModal = ({
       } else {
         // Sign up mode
         if (!username || username.length < 3) {
-          throw new Error('Username must be at least 3 characters.');
+          throw new Error(t.auth.usernameShort);
         }
 
         // Check if username is taken
@@ -821,7 +821,7 @@ const AuthModal = ({
           .maybeSingle();
 
         if (existingUser) {
-          throw new Error('Username already taken.');
+          throw new Error(t.auth.usernameTaken);
         }
 
         const { data: authData, error: signupError } = await supabase.auth.signUp({ 
@@ -850,7 +850,7 @@ const AuthModal = ({
           }
         }
         
-        alert('Check your email for the confirmation link!');
+        alert(t.auth.checkEmail);
       }
       onClose();
     } catch (err: any) {
@@ -1122,10 +1122,10 @@ export default function App() {
         setOrderHistory(orders.map(o => ({
           id: o.id,
           date: new Date(o.created_at).toLocaleString(),
-          items: o.order_data.items,
-          total: o.total,
-          tableNumber: o.order_data.tableNumber,
-          orderType: o.order_data.orderType
+          items: o.order_data?.items || [],
+          total: o.total || o.total_amount || '0',
+          tableNumber: o.order_data?.tableNumber,
+          orderType: o.order_data?.orderType
         })));
       }
     } catch (error) {
@@ -1238,7 +1238,11 @@ export default function App() {
         loading: "Loading...",
         error: "Authentication failed.",
         username: "Username",
-        emailOrUsername: "Email or Username"
+        emailOrUsername: "Email or Username",
+        userNotFound: "User not found with this username.",
+        usernameTaken: "Username already taken.",
+        usernameShort: "Username must be at least 3 characters.",
+        checkEmail: "Check your email for the confirmation link!"
       }
     },
     ku: {
@@ -1344,7 +1348,11 @@ export default function App() {
         loading: "لە پڕۆسەدایە...",
         error: "پڕۆسەی چوونەژوورەوە سەرکەوتوو نەبوو.",
         username: "ناوی بەکارهێنەر",
-        emailOrUsername: "ئیمەیل یان ناوی بەکارهێنەر"
+        emailOrUsername: "ئیمەیل یان ناوی بەکارهێنەر",
+        userNotFound: "بەکارهێنەر بەم ناوە نەدۆزرایەوە.",
+        usernameTaken: "ئەم ناوە پێشتر گیراوە.",
+        usernameShort: "ناوی بەکارهێنەر دەبێت لانی کەم ٣ پیت بێت.",
+        checkEmail: "سەیری ئیمەیڵەکەت بکە بۆ لینکی دڵنیابوونەوە!"
       }
     },
     ar: {
@@ -1450,7 +1458,11 @@ export default function App() {
         loading: "جاري التحميل...",
         error: "فشل تسجيل الدخول.",
         username: "اسم المستخدم",
-        emailOrUsername: "البريد الإلكتروني أو اسم المستخدم"
+        emailOrUsername: "البريد الإلكتروني أو اسم المستخدم",
+        userNotFound: "لم يتم العثور على المستخدم بهذا الاسم.",
+        usernameTaken: "اسم المستخدام مأخوذ بالفعل.",
+        usernameShort: "يجب أن يكون اسم المستخدم 3 أحرف على الأقل.",
+        checkEmail: "تحقق من بريدك الإلكتروني للحصول على رابط التأكيد!"
       }
     }
   }[language];
