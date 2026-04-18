@@ -3,10 +3,10 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
 const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase: SupabaseClient | null = (supabaseUrl && supabaseAnonKey) 
+export const supabase: SupabaseClient | null = (supabaseUrl && supabaseAnonKey && supabaseUrl !== 'https://your-project.supabase.co') 
   ? createClient(supabaseUrl, supabaseAnonKey) 
   : null;
 
 if (!supabase) {
-  console.warn('Supabase URL or Anon Key is missing. Database features will be disabled. Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.');
+  console.warn('Supabase is not configured. Authentication and database features will be disabled.');
 }

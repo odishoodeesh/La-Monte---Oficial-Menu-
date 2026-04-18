@@ -783,7 +783,7 @@ const AuthModal = ({
     setError(null);
 
     try {
-      if (!supabase) throw new Error(t.auth.error);
+      if (!supabase) throw new Error(t.auth.configError);
       
       let loginEmail = email;
 
@@ -1237,6 +1237,7 @@ export default function App() {
         welcome: "Welcome back!",
         loading: "Loading...",
         error: "Authentication failed.",
+        configError: "Database setup missing. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your app Secrets.",
         username: "Username",
         emailOrUsername: "Email or Username",
         userNotFound: "User not found with this username.",
@@ -1347,6 +1348,7 @@ export default function App() {
         welcome: "بەخێربێیتەوە!",
         loading: "لە پڕۆسەدایە...",
         error: "پڕۆسەی چوونەژوورەوە سەرکەوتوو نەبوو.",
+        configError: "ڕێکخستنی بنکەی زانیاری بوونی نییە. تکایە VITE_SUPABASE_URL زیاد بکە بۆ نهێنییەکانی بەرنامەکە.",
         username: "ناوی بەکارهێنەر",
         emailOrUsername: "ئیمەیل یان ناوی بەکارهێنەر",
         userNotFound: "بەکارهێنەر بەم ناوە نەدۆزرایەوە.",
@@ -1457,6 +1459,7 @@ export default function App() {
         welcome: "مرحباً بعودتك!",
         loading: "جاري التحميل...",
         error: "فشل تسجيل الدخول.",
+        configError: "إعداد قاعدة البيانات مفقود. يرجى إضافة VITE_SUPABASE_URL إلى أسرار التطبيق.",
         username: "اسم المستخدم",
         emailOrUsername: "البريد الإلكتروني أو اسم المستخدم",
         userNotFound: "لم يتم العثور على المستخدم بهذا الاسم.",
