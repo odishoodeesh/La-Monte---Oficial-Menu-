@@ -771,6 +771,7 @@ const AuthModal = ({
   t: any;
 }) => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -783,18 +784,72 @@ const AuthModal = ({
 
     try {
       if (!supabase) throw new Error(t.auth.error);
+      
+      let loginEmail = email;
+
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        // If it doesn't look like an email, assume it's a username
+        if (!email.includes('@')) {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('username', email.toLowerCase())
+            .single();
+
+          if (profileError || !profile) {
+            throw new Error('User not found with this username.');
+          }
+          loginEmail = profile.email;
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({ 
+          email: loginEmail, 
+          password 
+        });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({ 
+        // Sign up mode
+        if (!username || username.length < 3) {
+          throw new Error('Username must be at least 3 characters.');
+        }
+
+        // Check if username is taken
+        const { data: existingUser } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', username.toLowerCase())
+          .maybeSingle();
+
+        if (existingUser) {
+          throw new Error('Username already taken.');
+        }
+
+        const { data: authData, error: signupError } = await supabase.auth.signUp({ 
           email, 
           password,
           options: {
             emailRedirectTo: window.location.origin
           }
         });
-        if (error) throw error;
+
+        if (signupError) throw signupError;
+
+        if (authData.user) {
+          // Create profile record
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authData.user.id,
+              username: username.toLowerCase(),
+              email: email.toLowerCase()
+            });
+          
+          if (profileError) {
+            // If profile creation fails, we might have a ghost user, but Supabase handles it usually
+            console.error('Error creating profile:', profileError);
+          }
+        }
+        
         alert('Check your email for the confirmation link!');
       }
       onClose();
@@ -837,17 +892,33 @@ const AuthModal = ({
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 ml-4 flex items-center gap-2">
-                  <Mail size={12} /> {t.auth.email}
+                  <Mail size={12} /> {mode === 'login' ? t.auth.emailOrUsername : t.auth.email}
                 </label>
                 <input 
-                  type="email" 
+                  type="text" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-14 glass-dark rounded-2xl px-6 focus:outline-none focus:ring-1 focus:ring-[var(--text-color)]/20 transition-all"
-                  placeholder="name@example.com"
+                  className="w-full h-14 glass-dark rounded-2xl px-6 focus:outline-none focus:ring-1 focus:ring-[var(--text-color)]/20 transition-all font-medium"
+                  placeholder={mode === 'login' ? t.auth.emailOrUsername : "name@example.com"}
                 />
               </div>
+
+              {mode === 'signup' && (
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 ml-4 flex items-center gap-2">
+                    <UserIcon size={12} /> {t.auth.username}
+                  </label>
+                  <input 
+                    type="text" 
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full h-14 glass-dark rounded-2xl px-6 focus:outline-none focus:ring-1 focus:ring-[var(--text-color)]/20 transition-all font-medium"
+                    placeholder="lux_user"
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest font-bold opacity-40 ml-4 flex items-center gap-2">
@@ -858,7 +929,7 @@ const AuthModal = ({
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-14 glass-dark rounded-2xl px-6 focus:outline-none focus:ring-1 focus:ring-[var(--text-color)]/20 transition-all"
+                  className="w-full h-14 glass-dark rounded-2xl px-6 focus:outline-none focus:ring-1 focus:ring-[var(--text-color)]/20 transition-all font-medium"
                   placeholder="••••••••"
                 />
               </div>
@@ -867,7 +938,7 @@ const AuthModal = ({
                 <motion.p 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-red-400 text-xs text-center font-medium bg-red-400/10 py-3 rounded-xl border border-red-400/20"
+                  className="text-red-400 text-xs text-center font-medium bg-red-400/10 py-3 rounded-xl border border-red-400/20 px-4"
                 >
                   {error}
                 </motion.p>
@@ -1097,7 +1168,9 @@ export default function App() {
         subtotal: "Subtotal",
         total: "Total",
         order_now: "Order Now",
-        processing: "Processing"
+        processing: "Processing",
+        reorder: "Re-order",
+        details: "Order Details"
       },
       cart_legacy: "Your Cart", // keeping for safety during transition
       checkout: "Checkout",
@@ -1163,7 +1236,9 @@ export default function App() {
         haveAccount: "Already have an account?",
         welcome: "Welcome back!",
         loading: "Loading...",
-        error: "Authentication failed."
+        error: "Authentication failed.",
+        username: "Username",
+        emailOrUsername: "Email or Username"
       }
     },
     ku: {
@@ -1200,7 +1275,9 @@ export default function App() {
         subtotal: "کۆى گشتى بچووک",
         total: "کۆی گشتی",
         order_now: "ئێستا داوا بکە",
-        processing: "لە پڕۆسەدایە"
+        processing: "لە پڕۆسەدایە",
+        reorder: "دووبارە داوا بکەرەوە",
+        details: "وردەکارییەکانی داواکاری"
       },
       checkout: "تەواوکردنی کڕین",
       discover: "دۆزینەوە",
@@ -1265,7 +1342,9 @@ export default function App() {
         haveAccount: "هەژمارت هەیە؟",
         welcome: "بەخێربێیتەوە!",
         loading: "لە پڕۆسەدایە...",
-        error: "پڕۆسەی چوونەژوورەوە سەرکەوتوو نەبوو."
+        error: "پڕۆسەی چوونەژوورەوە سەرکەوتوو نەبوو.",
+        username: "ناوی بەکارهێنەر",
+        emailOrUsername: "ئیمەیل یان ناوی بەکارهێنەر"
       }
     },
     ar: {
@@ -1302,7 +1381,9 @@ export default function App() {
         subtotal: "المجموع الفرعي",
         total: "المجموع الكلي",
         order_now: "اطلب الآن",
-        processing: "جاري المعالجة"
+        processing: "جاري المعالجة",
+        reorder: "إعادة الطلب",
+        details: "تفاصيل الطلب"
       },
       checkout: "الدفع",
       discover: "اکتشف",
@@ -1367,7 +1448,9 @@ export default function App() {
         haveAccount: "لديك حساب بالفعل؟",
         welcome: "مرحباً بعودتك!",
         loading: "جاري التحميل...",
-        error: "فشل تسجيل الدخول."
+        error: "فشل تسجيل الدخول.",
+        username: "اسم المستخدم",
+        emailOrUsername: "البريد الإلكتروني أو اسم المستخدم"
       }
     }
   }[language];
@@ -1524,6 +1607,23 @@ export default function App() {
       return i;
     }));
   }, []);
+
+  const handleReorder = (items: CartItem[]) => {
+    setCart(prev => {
+      let newCart = [...prev];
+      items.forEach(newItem => {
+        const existing = newCart.find(i => i.id === newItem.id && i.note === newItem.note);
+        if (existing) {
+          existing.quantity += newItem.quantity;
+        } else {
+          newCart.push({ ...newItem });
+        }
+      });
+      return newCart;
+    });
+    setIsCartOpen(true);
+    setSelectedOrder(null);
+  };
 
   const toggleFavorite = useCallback(async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -2114,13 +2214,23 @@ export default function App() {
                           </div>
                           <div className="flex flex-col justify-between items-end">
                             <span className="text-2xl font-medium">{order.total}</span>
-                            <motion.button 
-                              whileHover={{ x: 5 }}
-                              onClick={() => setSelectedOrder(order)}
-                              className="text-xs font-bold uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors"
-                            >
-                              View Details <ChevronRight size={14} />
-                            </motion.button>
+                            <div className="flex items-center gap-4">
+                              <motion.button 
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleReorder(order.items)}
+                                className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-color)] flex items-center gap-1.5"
+                              >
+                                <ShoppingBag size={12} /> {t.cart.reorder}
+                              </motion.button>
+                              <motion.button 
+                                whileHover={{ x: 5 }}
+                                onClick={() => setSelectedOrder(order)}
+                                className="text-xs font-bold uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors"
+                              >
+                                {language === 'en' ? 'View Details' : language === 'ku' ? 'بینینی وردەکاری' : 'عرض التفاصيل'} <ChevronRight size={14} />
+                              </motion.button>
+                            </div>
                           </div>
                         </motion.div>
                       ))
@@ -2709,7 +2819,7 @@ export default function App() {
                   >
                     <div className="flex justify-between items-center mb-6 md:mb-8">
                       <div>
-                        <h2 className="text-2xl font-serif italic mb-1">Order Details</h2>
+                        <h2 className="text-2xl font-serif italic mb-1">{t.cart.details}</h2>
                         <p className="text-xs text-[var(--text-color)]/40 uppercase tracking-widest font-bold">#{selectedOrder.id}</p>
                       </div>
                       <motion.button 
@@ -2724,11 +2834,19 @@ export default function App() {
 
                     <div className="space-y-4 mb-8 max-h-[40vh] overflow-y-auto pr-2 no-scrollbar">
                       {selectedOrder.items.map((item, i) => (
-                        <div key={i} className="py-3 border-b border-white/5 last:border-0">
+                        <div key={i} className="py-3 border-b border-white/5 last:border-0 group">
                           <div className="flex justify-between items-start mb-1">
                             <div className="flex items-center gap-3">
                               <span className="text-sm text-[var(--text-color)]/40 font-bold">{item.quantity}x</span>
                               <span className="text-sm">{item.name}</span>
+                              <motion.button
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.8 }}
+                                onClick={(e) => toggleFavorite(item.id, e)}
+                                className={`opacity-0 group-hover:opacity-100 transition-opacity ${favorites.includes(item.id) ? 'text-red-500' : 'text-[var(--text-color)]/20'}`}
+                              >
+                                <Heart size={14} fill={favorites.includes(item.id) ? "currentColor" : "none"} />
+                              </motion.button>
                             </div>
                             <span className="text-sm font-medium">{item.price}</span>
                           </div>
@@ -2739,21 +2857,32 @@ export default function App() {
                       ))}
                     </div>
 
-                    <div className="glass-dark p-4 rounded-xl space-y-1.5">
-                      <div className="flex justify-between text-xs text-[var(--text-color)]/40">
-                        <span>Date</span>
-                        <span>{selectedOrder.date}</span>
-                      </div>
-                      {selectedOrder.tableNumber && (
+                    <div className="space-y-4">
+                      <div className="glass-dark p-4 rounded-xl space-y-1.5">
                         <div className="flex justify-between text-xs text-[var(--text-color)]/40">
-                          <span>Table Num</span>
-                          <span>{selectedOrder.tableNumber}</span>
+                          <span>{language === 'en' ? 'Date' : language === 'ku' ? 'بەروار' : 'التاريخ'}</span>
+                          <span>{selectedOrder.date}</span>
                         </div>
-                      )}
-                      <div className="flex justify-between text-base font-medium pt-1.5 border-t border-white/5">
-                        <span>Total Paid</span>
-                        <span>{selectedOrder.total}</span>
+                        {selectedOrder.tableNumber && (
+                          <div className="flex justify-between text-xs text-[var(--text-color)]/40">
+                            <span>{t.cart.table_num}</span>
+                            <span>{selectedOrder.tableNumber}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between text-base font-medium pt-1.5 border-t border-white/5">
+                          <span>{language === 'en' ? 'Total Paid' : language === 'ku' ? 'کۆی گشتی دراو' : 'إجمالي المدفوع'}</span>
+                          <span>{selectedOrder.total}</span>
+                        </div>
                       </div>
+
+                      <motion.button 
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleReorder(selectedOrder.items)}
+                        className="w-full bg-[var(--text-color)] text-[var(--bg-color)] py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 shadow-xl"
+                      >
+                        <ShoppingBag size={14} /> {t.cart.reorder}
+                      </motion.button>
                     </div>
                   </motion.div>
                 </div>
