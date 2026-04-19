@@ -1059,6 +1059,7 @@ export default function App() {
   
   // Auth & Profile State
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<{ username: string; email: string } | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [selectedOrder, setSelectedOrder] = useState<{ id: string; date: string; items: CartItem[]; total: string; tableNumber?: string } | null>(null);
@@ -1090,6 +1091,7 @@ export default function App() {
       if (session?.user) {
         fetchUserData(session.user.id);
       } else {
+        setProfile(null);
         setFavorites([]);
         setOrderHistory([]);
       }
@@ -1101,6 +1103,17 @@ export default function App() {
   const fetchUserData = async (userId: string) => {
     if (!supabase) return;
     try {
+      // Fetch Profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('username, email')
+        .eq('id', userId)
+        .single();
+      
+      if (profileData) {
+        setProfile(profileData);
+      }
+
       // Fetch Favorites
       const { data: favs } = await supabase
         .from('favorites')
@@ -1996,7 +2009,7 @@ export default function App() {
                   >
                     {user ? <LogOut size={14} /> : <UserIcon size={14} />}
                     <span className="sr-only md:not-sr-only">
-                      {user ? t.auth.logout : t.auth.login}
+                      {user ? (profile?.username ? `@${profile.username}` : t.auth.logout) : t.auth.login}
                     </span>
                   </motion.button>
                 </nav>
@@ -3172,6 +3185,17 @@ export default function App() {
                     </nav>
 
                     <nav className="flex flex-col gap-1 pt-2 border-t border-[var(--text-color)]/10">
+                      {user && (
+                        <div className="px-4 py-2 mb-2 bg-[var(--text-color)]/5 rounded-2xl flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[var(--text-color)]/10 flex items-center justify-center">
+                            <UserIcon size={16} />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-bold leading-none">@{profile?.username || 'user'}</span>
+                            <span className="text-[10px] opacity-40 truncate max-w-[150px]">{user.email}</span>
+                          </div>
+                        </div>
+                      )}
                       <motion.button 
                         whileHover={{ x: 5 }}
                         onClick={() => {
@@ -3183,6 +3207,22 @@ export default function App() {
                       >
                         <Layout size={18} />
                         <span className="font-medium capitalize">{viewMode} View</span>
+                      </motion.button>
+                      <motion.button 
+                        whileHover={{ x: 5 }}
+                        onClick={() => {
+                          if (user) {
+                            supabase?.auth.signOut();
+                            setIsMobileMenuOpen(false);
+                          } else {
+                            setIsAuthOpen(true);
+                            setIsMobileMenuOpen(false);
+                          }
+                        }}
+                        className="flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all hover:bg-red-500/10 text-red-500"
+                      >
+                        {user ? <LogOut size={18} /> : <UserIcon size={18} />}
+                        <span className="font-medium">{user ? t.auth.logout : t.auth.login}</span>
                       </motion.button>
                       <motion.button 
                         whileHover={{ x: 5 }}
@@ -3215,21 +3255,6 @@ export default function App() {
                       >
                         <Info size={18} />
                         <span className="font-medium">{t.about}</span>
-                      </motion.button>
-                      <motion.button 
-                        whileHover={{ x: 5 }}
-                        onClick={() => {
-                          if (user) {
-                            supabase?.auth.signOut();
-                          } else {
-                            setIsAuthOpen(true);
-                          }
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all hover:bg-[var(--accent-color)]/10 text-[var(--accent-color)]"
-                      >
-                        {user ? <LogOut size={18} /> : <UserIcon size={18} />}
-                        <span className="font-medium">{user ? t.auth.logout : t.auth.login}</span>
                       </motion.button>
                     </nav>
                   </motion.div>
