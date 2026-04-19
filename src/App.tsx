@@ -22,7 +22,7 @@ import { Category, MenuItem, CartItem, MainCategory } from './types';
 import { MENU_ITEMS } from './data';
 import { fetchDuhokWeather, WeatherData } from './services/weatherService';
 
-type View = 'menu' | 'favorites' | 'history' | 'reservation';
+type View = 'menu' | 'profile' | 'reservation';
 
 interface PaletteColors {
   bg: string;
@@ -981,6 +981,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'minimal' | 'compact' | 'magazine'>('grid');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [currentView, setCurrentView] = useState<View>('menu');
+  const [profileTab, setProfileTab] = useState<'favorites' | 'history'>('history');
   const [showIntro, setShowIntro] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
@@ -1232,6 +1233,7 @@ export default function App() {
   const t = {
     en: {
       menu: 'Menu',
+      profile: 'Profile',
       favorites: 'Favorites',
       history: 'History',
       reserve: 'Reserve a Table',
@@ -1344,8 +1346,9 @@ export default function App() {
     },
     ku: {
       menu: 'مینیو',
+      profile: 'پرۆفایل',
       favorites: 'دڵخوازەکان',
-      history: 'مێژووی داواکاری',
+      history: 'داواکارییەکان',
       reserve: 'حیجزکردنی مێز',
       magic: 'جیهانی سیحراوی',
       theme: 'گۆڕینی ڕەنگ',
@@ -1455,6 +1458,7 @@ export default function App() {
     },
     ar: {
       menu: 'القائمة',
+      profile: 'الملف الشخصي',
       favorites: 'المفضلات',
       history: 'سجل الطلبات',
       reserve: 'حجز طاولة',
@@ -2105,23 +2109,15 @@ export default function App() {
                     className={`transition-colors flex items-center gap-2 ${currentView === 'menu' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
                   >
                     <Home size={14} />
-                    Menu
+                    {t.menu}
                   </motion.button>
                   <motion.button 
                     whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setCurrentView('favorites')}
-                    className={`transition-colors hidden items-center gap-2 ${currentView === 'favorites' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
+                    onClick={() => setCurrentView('profile')}
+                    className={`transition-colors flex items-center gap-2 ${currentView === 'profile' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
                   >
-                    <Heart size={14} fill={currentView === 'favorites' ? 'currentColor' : 'none'} />
-                    Favorites
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setCurrentView('history')}
-                    className={`transition-colors hidden items-center gap-2 ${currentView === 'history' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
-                  >
-                    <History size={14} />
-                    History
+                    <UserIcon size={14} />
+                    {t.profile}
                   </motion.button>
                   <motion.button 
                     whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
@@ -2129,7 +2125,7 @@ export default function App() {
                     className={`transition-colors flex items-center gap-2 ${isReservationOpen ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
                   >
                     <Calendar size={14} />
-                    Reserve
+                    {t.reserve}
                   </motion.button>
                   <motion.button 
                     whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
@@ -2328,130 +2324,294 @@ export default function App() {
             )}
 
             <main className="pt-60 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
-              {/* View Title */}
-              <div className="mb-12 text-center lg:text-left">
-                <h2 className="text-4xl font-serif italic mb-2 text-glow">
-                  {currentView === 'menu' 
-                    ? activeQuickFilter === 'Recommended' 
-                      ? t.recommended 
-                      : `${t.categories[activeMainCategory] || activeMainCategory} / ${t.categories[activeCategory] || activeCategory}` 
-                    : currentView === 'favorites' 
-                      ? t.favorites 
-                      : t.history}
-                </h2>
-                <p className="opacity-40 text-sm tracking-widest uppercase font-bold">
-                  {currentView === 'menu' && activeQuickFilter === 'Recommended' 
-                    ? `${t.weather_picks} ${weather ? `(${weather.temp}°C)` : ''}`
-                    : currentView === 'history' 
-                      ? `${orderHistory.length} ${t.orders}` 
-                      : `${filteredItems.length} ${t.items}`}
-                </p>
-              </div>
-
-              {/* Content Views */}
               <AnimatePresence mode="wait">
-                {currentView === 'history' ? (
+                {currentView === 'profile' ? (
                   <motion.div
-                    key="history-view"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="space-y-6"
+                    key="profile-view"
+                    initial={{ opacity: 0, scale: 0.98, y: 30 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.98, y: -30 }}
+                    className="w-full"
                   >
-                    {orderHistory.length > 0 ? (
-                      orderHistory.map((order) => (
-                        <motion.div 
-                          key={order.id} 
-                          whileHover={{ y: -4, backgroundColor: "rgba(255,255,255,0.05)" }}
-                          className="glass-dark rounded-[2rem] p-8 flex flex-col md:flex-row justify-between gap-6 transition-colors"
+                    {/* User Profile Header */}
+                    <div className="glass rounded-[3rem] p-8 md:p-12 mb-12 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden shadow-2xl">
+                      <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--accent-color)]/5 rounded-full -mr-40 -mt-40 blur-[100px]" />
+                      
+                      <div className="relative group">
+                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full glass border-4 border-[var(--bg-color)] shadow-2xl overflow-hidden flex items-center justify-center transform group-hover:scale-105 transition-transform duration-500">
+                          {user ? (
+                            <img 
+                              src={`https://api.dicebear.com/7.x/notionists/svg?seed=${profile?.username || user.email}`} 
+                              alt="Avatar" 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <UserIcon size={56} className="opacity-10" />
+                          )}
+                        </div>
+                        {user && (
+                          <motion.div 
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute bottom-2 right-2 bg-emerald-500 w-8 h-8 rounded-full border-4 border-[var(--bg-color)] shadow-lg flex items-center justify-center"
+                          >
+                            <CheckCircle2 size={12} className="text-white" />
+                          </motion.div>
+                        )}
+                      </div>
+
+                      <div className="text-center md:text-left flex-1 relative z-10">
+                        <motion.h1 
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="text-4xl md:text-5xl font-serif italic mb-3 tracking-tight"
                         >
-                          <div>
-                            <div className="flex items-center gap-3 mb-4">
-                              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest">Order #{order.id}</span>
-                              <span className="text-white/40 text-xs">{order.date}</span>
-                            </div>
-                            <div className="flex -space-x-4">
-                              {order.items.slice(0, 4).map((item, i) => (
-                                <div key={i} className="w-12 h-12 rounded-full border-2 border-[#0A0A0B] overflow-hidden bg-white/10">
-                                  <img src={item.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                                </div>
-                              ))}
-                              {order.items.length > 4 && (
-                                <div className="w-12 h-12 rounded-full border-2 border-[#0A0A0B] bg-white/10 flex items-center justify-center text-xs font-bold">
-                                  +{order.items.length - 4}
+                          {user ? (profile?.username ? `@${profile.username}` : user.email?.split('@')[0]) : (language === 'en' ? 'Guest' : language === 'ar' ? 'ضيف' : 'میوان')}
+                        </motion.h1>
+                        <p className="opacity-40 text-sm tracking-[0.3em] uppercase font-bold mb-8">
+                          {user ? user.email : (language === 'en' ? 'Login to unlock your history' : language === 'ar' ? 'سجل الدخول لعرض سجلاتك' : 'بچۆرە ژوورەوە بۆ بینینی مێژووەکەت')}
+                        </p>
+                        
+                        <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                          {!user ? (
+                            <motion.button
+                              whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => setIsAuthOpen(true)}
+                              className="bg-[var(--text-color)] text-[var(--bg-color)] px-10 py-3.5 rounded-full font-bold uppercase tracking-widest text-xs transition-all"
+                            >
+                              {t.auth.login}
+                            </motion.button>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => supabase?.auth.signOut()}
+                              className="glass border border-[var(--text-color)]/10 px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-red-500/10 hover:border-red-500/30 transition-all flex items-center gap-2"
+                            >
+                              <LogOut size={14} /> {t.auth.logout}
+                            </motion.button>
+                          )}
+                        </div>
+                      </div>
+
+                      {user && (
+                        <div className="flex gap-4 md:flex-col lg:flex-row">
+                          <motion.div 
+                            whileHover={{ y: -5 }}
+                            className="text-center px-8 py-5 glass-dark rounded-[2.5rem] min-w-[120px] shadow-xl"
+                          >
+                            <p className="text-3xl font-serif italic mb-1 text-[var(--accent-color)]">{orderHistory.length}</p>
+                            <p className="text-[10px] uppercase tracking-widest font-black opacity-30">{t.history}</p>
+                          </motion.div>
+                          <motion.div 
+                            whileHover={{ y: -5 }}
+                            className="text-center px-8 py-5 glass-dark rounded-[2.5rem] min-w-[120px] shadow-xl"
+                          >
+                            <p className="text-3xl font-serif italic mb-1 text-red-500/80">{favorites.length}</p>
+                            <p className="text-[10px] uppercase tracking-widest font-black opacity-30">{t.favorites}</p>
+                          </motion.div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Personal Activity Tabs */}
+                    {user && (
+                      <div className="space-y-10">
+                        <div className="flex items-center justify-center md:justify-start gap-8 border-b border-[var(--text-color)]/5 pb-2">
+                          <button 
+                            onClick={() => setProfileTab('history')}
+                            className={`px-2 py-4 text-sm font-black uppercase tracking-widest transition-all relative ${profileTab === 'history' ? 'opacity-100' : 'opacity-30 hover:opacity-100'}`}
+                          >
+                            <span className="flex items-center gap-2"><History size={14} /> {t.history}</span>
+                            {profileTab === 'history' && (
+                              <motion.div layoutId="profile-tab-active" className="absolute bottom-[-2px] left-0 right-0 h-1 bg-[var(--accent-color)] rounded-full" />
+                            )}
+                          </button>
+                          <button 
+                            onClick={() => setProfileTab('favorites')}
+                            className={`px-2 py-4 text-sm font-black uppercase tracking-widest transition-all relative ${profileTab === 'favorites' ? 'opacity-100' : 'opacity-30 hover:opacity-100'}`}
+                          >
+                            <span className="flex items-center gap-2"><Heart size={14} /> {t.favorites}</span>
+                            {profileTab === 'favorites' && (
+                              <motion.div layoutId="profile-tab-active" className="absolute bottom-[-2px] left-0 right-0 h-1 bg-red-400 rounded-full" />
+                            )}
+                          </button>
+                        </div>
+
+                        <AnimatePresence mode="wait">
+                          {profileTab === 'history' ? (
+                            <motion.div
+                              key="tab-hist"
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                              className="space-y-6"
+                            >
+                              {orderHistory.length > 0 ? (
+                                orderHistory.map((order) => (
+                                  <motion.div 
+                                    key={order.id} 
+                                    whileHover={{ y: -4, backgroundColor: "rgba(255,255,255,0.02)" }}
+                                    className="glass-dark rounded-[2.5rem] p-8 flex flex-col md:flex-row justify-between gap-8 transition-all border border-white/5 shadow-2xl group"
+                                  >
+                                    <div className="space-y-6">
+                                      <div className="flex items-center gap-4">
+                                        <div className="px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 group-hover:border-[var(--accent-color)]/30 transition-colors">
+                                          Order #{order.id}
+                                        </div>
+                                        <div className="flex items-center gap-1.5 opacity-40 text-[10px] font-bold uppercase tracking-widest">
+                                          <Clock size={10} /> {order.date}
+                                        </div>
+                                      </div>
+                                      <div className="flex -space-x-5">
+                                        {order.items.slice(0, 5).map((item, i) => (
+                                          <motion.div 
+                                            key={i} 
+                                            whileHover={{ y: -8, zIndex: 10, scale: 1.1 }}
+                                            className="w-14 h-14 rounded-full border-[3px] border-[#0A0A0B] overflow-hidden bg-white/5 shadow-lg cursor-pointer"
+                                          >
+                                            <img src={item.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                          </motion.div>
+                                        ))}
+                                        {order.items.length > 5 && (
+                                          <div className="w-14 h-14 rounded-full border-[3px] border-[#0A0A0B] bg-[var(--text-color)]/10 flex items-center justify-center text-[10px] font-black tracking-tighter backdrop-blur-md">
+                                            +{order.items.length - 5}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col justify-between items-end gap-6">
+                                      <div className="text-right">
+                                        <p className="text-[10px] uppercase tracking-widest font-black opacity-20 mb-1">Total Amount</p>
+                                        <p className="text-3xl font-serif italic text-glow">{order.total}</p>
+                                      </div>
+                                      <div className="flex items-center gap-6">
+                                        <motion.button 
+                                          whileHover={{ scale: 1.05, color: "#fff" }}
+                                          whileTap={{ scale: 0.95 }}
+                                          onClick={() => handleReorder(order.items)}
+                                          className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent-color)] flex items-center gap-2 group/btn"
+                                        >
+                                          <ShoppingBag size={14} className="group-hover/btn:rotate-12 transition-transform" /> {t.cart.reorder}
+                                        </motion.button>
+                                        <motion.button 
+                                          whileHover={{ x: 5, opacity: 1 }}
+                                          onClick={() => setSelectedOrder(order)}
+                                          className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 flex items-center gap-2 hover:text-[var(--text-color)] transition-all"
+                                        >
+                                          Details <ChevronRight size={14} />
+                                        </motion.button>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                ))
+                              ) : (
+                                <div className="py-32 flex flex-col items-center justify-center glass rounded-[3rem] border border-dashed border-white/10">
+                                  <Clock className="opacity-10 mb-6" size={64} strokeWidth={1} />
+                                  <p className="opacity-40 uppercase tracking-[0.3em] font-black text-xs">Awaiting your first taste</p>
                                 </div>
                               )}
-                            </div>
-                          </div>
-                          <div className="flex flex-col justify-between items-end">
-                            <span className="text-2xl font-medium">{order.total}</span>
-                            <div className="flex items-center gap-4">
-                              <motion.button 
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleReorder(order.items)}
-                                className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-color)] flex items-center gap-1.5"
-                              >
-                                <ShoppingBag size={12} /> {t.cart.reorder}
-                              </motion.button>
-                              <motion.button 
-                                whileHover={{ x: 5 }}
-                                onClick={() => setSelectedOrder(order)}
-                                className="text-xs font-bold uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors"
-                              >
-                                {language === 'en' ? 'View Details' : language === 'ku' ? 'بینینی وردەکاری' : 'عرض التفاصيل'} <ChevronRight size={14} />
-                              </motion.button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))
-                    ) : (
-                      <div className="py-32 flex flex-col items-center justify-center glass rounded-[3rem]">
-                        <Clock className="text-white/20 mb-4" size={48} />
-                        <p className="text-white/40 font-medium">No orders yet.</p>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key="tab-favs"
+                              initial={{ opacity: 0, scale: 0.98 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.98 }}
+                              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5"
+                            >
+                              {favorites.length > 0 ? (
+                                MENU_ITEMS.filter(item => favorites.includes(item.id)).map((item, index) => (
+                                  <MenuItemCard
+                                    key={item.id}
+                                    item={item}
+                                    index={index}
+                                    viewMode="grid"
+                                    favorites={favorites}
+                                    toggleFavorite={toggleFavorite}
+                                    setSelectedItem={setSelectedItem}
+                                    language={language}
+                                    t={t}
+                                  />
+                                ))
+                              ) : (
+                                <div className="col-span-full py-32 flex flex-col items-center justify-center glass rounded-[3rem] border border-dashed border-white/10">
+                                  <Heart className="opacity-10 mb-6 text-red-500" size={64} strokeWidth={1} />
+                                  <p className="opacity-40 uppercase tracking-[0.3em] font-black text-xs">Heart a few items to see them here</p>
+                                </div>
+                              )}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     )}
                   </motion.div>
                 ) : (
-                  <motion.div
-                    key={currentView + activeCategory + searchQuery}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.4 }}
-                    className={
-                      viewMode === 'grid' 
-                        ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
-                        : viewMode === 'list'
-                        ? "flex flex-col gap-4 max-w-3xl mx-auto"
-                        : viewMode === 'minimal'
-                        ? "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3"
-                        : viewMode === 'compact'
-                        ? "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2"
-                        : "grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto"
-                    }
-                  >
-                    {filteredItems.length > 0 ? (
-                      filteredItems.map((item, index) => (
-                        <MenuItemCard
-                          key={item.id}
-                          item={item}
-                          index={index}
-                          viewMode={viewMode}
-                          favorites={favorites}
-                          toggleFavorite={toggleFavorite}
-                          setSelectedItem={setSelectedItem}
-                          language={language}
-                          t={t}
-                        />
-                      ))
-                    ) : (
-                      <div className="col-span-full py-32 flex flex-col items-center justify-center glass rounded-[3rem]">
-                        <Sparkles className="opacity-20 mb-4" size={48} />
-                        <p className="opacity-40 font-medium">Nothing here yet.</p>
+                  <>
+                    {/* Catalog Header */}
+                    <div className="mb-14 text-center lg:text-left flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                       <div className="space-y-2">
+                        <motion.h2 
+                          key={activeCategory}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-4xl md:text-5xl font-serif italic text-glow"
+                        >
+                          {activeQuickFilter === 'Recommended' 
+                              ? t.recommended 
+                              : (t.categories[activeCategory] || activeCategory)}
+                        </motion.h2>
+                        <p className="opacity-40 text-xs tracking-[0.4em] uppercase font-black">
+                          {activeQuickFilter === 'Recommended' 
+                            ? `${t.weather_picks} ${weather ? `(${weather.temp}°C)` : ''}`
+                            : `${t.categories[activeMainCategory] || activeMainCategory} / ${filteredItems.length} ${t.items}`}
+                        </p>
                       </div>
-                    )}
-                  </motion.div>
+                    </div>
+
+                    <motion.div
+                      key={currentView + activeCategory + searchQuery + viewMode}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className={
+                        viewMode === 'grid' 
+                          ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6"
+                          : viewMode === 'list'
+                          ? "flex flex-col gap-4 max-w-3xl mx-auto"
+                          : "grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto"
+                      }
+                    >
+                      {filteredItems.length > 0 ? (
+                        filteredItems.map((item, index) => (
+                          <MenuItemCard
+                            key={item.id}
+                            item={item}
+                            index={index}
+                            viewMode={viewMode}
+                            favorites={favorites}
+                            toggleFavorite={toggleFavorite}
+                            setSelectedItem={setSelectedItem}
+                            language={language}
+                            t={t}
+                          />
+                        ))
+                      ) : (
+                        <div className="col-span-full py-40 flex flex-col items-center justify-center glass rounded-[4rem] text-center">
+                          <motion.div
+                            animate={{ rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
+                          >
+                            <Search className="opacity-10 mb-6" size={80} strokeWidth={1} />
+                          </motion.div>
+                          <h3 className="text-xl font-serif italic mb-2">No flavor matches</h3>
+                          <p className="text-white/30 text-xs uppercase tracking-widest font-bold">Try adjusting your filters or search terms</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </main>
@@ -3295,19 +3455,18 @@ export default function App() {
                       </motion.button>
                       <motion.button 
                         whileHover={{ x: 5 }}
-                        onClick={() => { setCurrentView('favorites'); setIsMobileMenuOpen(false); }}
-                        className={`flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all ${currentView === 'favorites' ? 'bg-[var(--text-color)] text-[var(--bg-color)]' : 'hover:bg-[var(--text-color)]/5'}`}
+                        onClick={() => { 
+                          if (user) {
+                            setCurrentView('profile'); 
+                          } else {
+                            setIsAuthOpen(true);
+                          }
+                          setIsMobileMenuOpen(false); 
+                        }}
+                        className={`flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all ${currentView === 'profile' ? 'bg-[var(--text-color)] text-[var(--bg-color)] shadow-lg' : 'hover:bg-[var(--text-color)]/5'}`}
                       >
-                        <Heart size={18} fill={currentView === 'favorites' ? 'currentColor' : 'none'} />
-                        <span className="font-medium">{t.favorites}</span>
-                      </motion.button>
-                      <motion.button 
-                        whileHover={{ x: 5 }}
-                        onClick={() => { setCurrentView('history'); setIsMobileMenuOpen(false); }}
-                        className={`flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all ${currentView === 'history' ? 'bg-[var(--text-color)] text-[var(--bg-color)]' : 'hover:bg-[var(--text-color)]/5'}`}
-                      >
-                        <History size={18} />
-                        <span className="font-medium">{t.history}</span>
+                        <UserIcon size={18} className={currentView === 'profile' ? 'text-[var(--bg-color)]' : 'text-[var(--text-color)] opacity-60'} />
+                        <span className="font-medium">{t.profile}</span>
                       </motion.button>
                       <motion.button 
                         whileHover={{ x: 5 }}
