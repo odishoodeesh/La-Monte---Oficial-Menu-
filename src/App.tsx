@@ -1068,6 +1068,9 @@ export default function App() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [recommendedIds, setRecommendedIds] = useState<string[]>([]);
   const [showBars, setShowBars] = useState(true);
+  const [isOrdering, setIsOrdering] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSynced, setLastSynced] = useState<Date | null>(null);
   
   // Refs to avoid stale closures
   const favoritesRef = React.useRef(favorites);
@@ -1121,9 +1124,10 @@ export default function App() {
   const fetchUserData = async (userId: string, currentLocalFavorites?: string[], currentLocalOrders?: any[]) => {
     if (!supabase) return;
     setIsSyncing(true);
+    
+    // 1. Fetch/Sync Profile
     try {
-      // 1. Fetch Profile
-      const { data: profileData } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('username, email')
         .eq('id', userId)
@@ -1131,9 +1135,16 @@ export default function App() {
       
       if (profileData) {
         setProfile(profileData);
+      } else if (profileError?.code === 'PGRST116') {
+        // Profile doesn't exist yet, we could try to create it or just leave it null
+        console.log('Profile record not found for user');
       }
+    } catch (err) {
+      console.warn('Profile fetch failed, continuing with other data:', err);
+    }
 
-      // 2. Fetch Favorites & Merge with local guest favorites
+    // 2. Fetch/Merge Favorites
+    try {
       const { data: favs } = await supabase
         .from('favorites')
         .select('item_id')
@@ -1141,7 +1152,6 @@ export default function App() {
       
       let dbFavorites: string[] = favs ? favs.map(f => f.item_id) : [];
       
-      // If we have local favorites from being a guest, sync them to DB
       if (currentLocalFavorites && currentLocalFavorites.length > 0) {
         const localFavoritesToSync = currentLocalFavorites.filter(id => !dbFavorites.includes(id));
         if (localFavoritesToSync.length > 0) {
@@ -1154,8 +1164,12 @@ export default function App() {
         }
       }
       setFavorites(dbFavorites);
+    } catch (err) {
+      console.error('Favorites sync failed:', err);
+    }
 
-      // 3. Fetch Orders & Merge with local guest orders
+    // 3. Fetch/Merge Orders
+    try {
       const { data: orders } = await supabase
         .from('orders')
         .select('*')
@@ -1174,43 +1188,45 @@ export default function App() {
       if (currentLocalOrders && currentLocalOrders.length > 0) {
         const localOnlyOrders = currentLocalOrders.filter(lo => !dbOrders.some(dbo => dbo.id === lo.id));
         
-        for (const localOrder of localOnlyOrders) {
-          await supabase.from('orders').insert({
-            user_id: userId,
-            total: localOrder.total,
-            order_data: {
-              items: localOrder.items,
-              tableNumber: localOrder.tableNumber,
-              orderType: localOrder.orderType
-            }
-          });
-        }
+        if (localOnlyOrders.length > 0) {
+          for (const localOrder of localOnlyOrders) {
+            await supabase.from('orders').insert({
+              user_id: userId,
+              total: localOrder.total,
+              order_data: {
+                items: localOrder.items,
+                tableNumber: localOrder.tableNumber,
+                orderType: localOrder.orderType
+              }
+            });
+          }
 
-        const { data: updatedOrders } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false });
-        
-        if (updatedOrders) {
-          dbOrders = updatedOrders.map(o => ({
-            id: o.id,
-            date: new Date(o.created_at).toLocaleString(),
-            items: o.order_data?.items || [],
-            total: o.total || o.total_amount || '0',
-            tableNumber: o.order_data?.tableNumber,
-            orderType: o.order_data?.orderType
-          }));
+          const { data: updatedOrders } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          
+          if (updatedOrders) {
+            dbOrders = updatedOrders.map(o => ({
+              id: o.id,
+              date: new Date(o.created_at).toLocaleString(),
+              items: o.order_data?.items || [],
+              total: o.total || o.total_amount || '0',
+              tableNumber: o.order_data?.tableNumber,
+              orderType: o.order_data?.orderType
+            }));
+          }
         }
       }
       
       setOrderHistory(dbOrders);
-      setLastSynced(new Date());
-    } catch (error) {
-      console.error('Error fetching/syncing user data:', error);
-    } finally {
-      setIsSyncing(false);
+    } catch (err) {
+      console.error('Orders sync failed:', err);
     }
+
+    setLastSynced(new Date());
+    setIsSyncing(false);
   };
 
   const t = {
@@ -1645,12 +1661,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('cafe_cart', JSON.stringify(cart));
-    localStorage.setItem('cafe_favorites', JSON.stringify(favorites));
-    localStorage.setItem('cafe_history', JSON.stringify(orderHistory));
-    localStorage.setItem('cafe_theme', theme);
-    localStorage.setItem('cafe_view_mode', viewMode);
-  }, [cart, favorites, orderHistory, theme, viewMode]);
+    // Only save to localStorage if we're not currently syncing from the cloud
+    // This prevents overwriting local data with temporary empty states during login
+    if (!isSyncing) {
+      localStorage.setItem('cafe_cart', JSON.stringify(cart));
+      localStorage.setItem('cafe_favorites', JSON.stringify(favorites));
+      localStorage.setItem('cafe_history', JSON.stringify(orderHistory));
+      localStorage.setItem('cafe_theme', theme);
+      localStorage.setItem('cafe_view_mode', viewMode);
+    }
+  }, [cart, favorites, orderHistory, theme, viewMode, isSyncing]);
 
   // Memoized Filtering Logic
   const filteredItems = useMemo(() => {
@@ -1755,10 +1775,6 @@ export default function App() {
       }
     }
   }, [favorites, user]);
-
-  const [isOrdering, setIsOrdering] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
   const checkout = async () => {
     if (cart.length === 0) return;
