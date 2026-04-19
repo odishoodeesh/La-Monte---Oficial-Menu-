@@ -1067,6 +1067,18 @@ export default function App() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [recommendedIds, setRecommendedIds] = useState<string[]>([]);
   const [showBars, setShowBars] = useState(true);
+  
+  // Refs to avoid stale closures in auth listener
+  const favoritesRef = React.useRef(favorites);
+  const orderHistoryRef = React.useRef(orderHistory);
+
+  useEffect(() => {
+    favoritesRef.current = favorites;
+  }, [favorites]);
+
+  useEffect(() => {
+    orderHistoryRef.current = orderHistory;
+  }, [orderHistory]);
 
   // Language & RTL Effect
   useEffect(() => {
@@ -1082,15 +1094,15 @@ export default function App() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchUserData(session.user.id);
+        fetchUserData(session.user.id, favoritesRef.current, orderHistoryRef.current);
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserData(session.user.id);
-      } else {
+      if (session?.user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
+        fetchUserData(session.user.id, favoritesRef.current, orderHistoryRef.current);
+      } else if (event === 'SIGNED_OUT') {
         setProfile(null);
         setFavorites([]);
         setOrderHistory([]);
@@ -1100,10 +1112,10 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserData = async (userId: string) => {
+  const fetchUserData = async (userId: string, currentLocalFavorites?: string[], currentLocalOrders?: any[]) => {
     if (!supabase) return;
     try {
-      // Fetch Profile
+      // 1. Fetch Profile
       const { data: profileData } = await supabase
         .from('profiles')
         .select('username, email')
@@ -1114,35 +1126,87 @@ export default function App() {
         setProfile(profileData);
       }
 
-      // Fetch Favorites
+      // 2. Fetch Favorites & Merge with local guest favorites
       const { data: favs } = await supabase
         .from('favorites')
         .select('item_id')
         .eq('user_id', userId);
       
-      if (favs) {
-        setFavorites(favs.map(f => f.item_id));
+      let dbFavorites: string[] = favs ? favs.map(f => f.item_id) : [];
+      
+      // If we have local favorites from being a guest, sync them to DB
+      if (currentLocalFavorites && currentLocalFavorites.length > 0) {
+        const localFavoritesToSync = currentLocalFavorites.filter(id => !dbFavorites.includes(id));
+        if (localFavoritesToSync.length > 0) {
+          await supabase
+            .from('favorites')
+            .upsert(localFavoritesToSync.map(id => ({ user_id: userId, item_id: id })));
+          dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
+        } else {
+           // still merge local to state even if all exist in DB
+           dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
+        }
       }
+      setFavorites(dbFavorites);
 
-      // Fetch Orders
+      // 3. Fetch Orders & Merge with local guest orders
       const { data: orders } = await supabase
         .from('orders')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
-      if (orders) {
-        setOrderHistory(orders.map(o => ({
-          id: o.id,
-          date: new Date(o.created_at).toLocaleString(),
-          items: o.order_data?.items || [],
-          total: o.total || o.total_amount || '0',
-          tableNumber: o.order_data?.tableNumber,
-          orderType: o.order_data?.orderType
-        })));
+      let dbOrders = orders ? orders.map(o => ({
+        id: o.id,
+        date: new Date(o.created_at).toLocaleString(),
+        items: o.order_data?.items || [],
+        total: o.total || o.total_amount || '0',
+        tableNumber: o.order_data?.tableNumber,
+        orderType: o.order_data?.orderType
+      })) : [];
+
+      // If we have guest orders, we can either sync them to DB or just merge them to state
+      // For simplicity, we'll merge them to state. 
+      // Users usually want guest orders to join their permanent account history.
+      if (currentLocalOrders && currentLocalOrders.length > 0) {
+        // Find orders that are local (not in DB yet - simple ID check as guest orders use random strings)
+        const localOnlyOrders = currentLocalOrders.filter(lo => !dbOrders.some(dbo => dbo.id === lo.id));
+        
+        // Optionally sync these to DB too
+        for (const localOrder of localOnlyOrders) {
+          await supabase.from('orders').insert({
+            user_id: userId,
+            total: localOrder.total,
+            order_data: {
+              items: localOrder.items,
+              tableNumber: localOrder.tableNumber,
+              orderType: localOrder.orderType
+            }
+          });
+        }
+
+        // Re-fetch orders after sync to get correct DB IDs/Dates
+        const { data: updatedOrders } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+        
+        if (updatedOrders) {
+          dbOrders = updatedOrders.map(o => ({
+            id: o.id,
+            date: new Date(o.created_at).toLocaleString(),
+            items: o.order_data?.items || [],
+            total: o.total || o.total_amount || '0',
+            tableNumber: o.order_data?.tableNumber,
+            orderType: o.order_data?.orderType
+          }));
+        }
       }
+      
+      setOrderHistory(dbOrders);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error fetching/syncing user data:', error);
     }
   };
 
