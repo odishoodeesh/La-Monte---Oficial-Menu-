@@ -13,7 +13,8 @@ import {
   IceCream, Cookie, Beef, Soup, Sun, Moon, Layout,
   LayoutGrid, LayoutList, LayoutTemplate, Palette, Menu,
   Volume2, VolumeX, Maximize2, Calendar, MapPin, 
-  Languages, Globe, User as UserIcon, LogOut, Mail, Lock
+  Languages, Globe, User as UserIcon, LogOut, Mail, Lock,
+  RefreshCw, Cloud
 } from 'lucide-react';
 import { supabase } from './lib/supabase';
 import { User } from '@supabase/supabase-js';
@@ -1119,6 +1120,7 @@ export default function App() {
 
   const fetchUserData = async (userId: string, currentLocalFavorites?: string[], currentLocalOrders?: any[]) => {
     if (!supabase) return;
+    setIsSyncing(true);
     try {
       // 1. Fetch Profile
       const { data: profileData } = await supabase
@@ -1145,10 +1147,9 @@ export default function App() {
         if (localFavoritesToSync.length > 0) {
           await supabase
             .from('favorites')
-            .upsert(localFavoritesToSync.map(id => ({ user_id: userId, item_id: id })));
+            .upsert(localFavoritesToSync.map(id => ({ user_id: userId, item_id: id })), { onConflict: 'user_id,item_id' });
           dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
         } else {
-           // still merge local to state even if all exist in DB
            dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
         }
       }
@@ -1170,14 +1171,9 @@ export default function App() {
         orderType: o.order_data?.orderType
       })) : [];
 
-      // If we have guest orders, we can either sync them to DB or just merge them to state
-      // For simplicity, we'll merge them to state. 
-      // Users usually want guest orders to join their permanent account history.
       if (currentLocalOrders && currentLocalOrders.length > 0) {
-        // Find orders that are local (not in DB yet - simple ID check as guest orders use random strings)
         const localOnlyOrders = currentLocalOrders.filter(lo => !dbOrders.some(dbo => dbo.id === lo.id));
         
-        // Optionally sync these to DB too
         for (const localOrder of localOnlyOrders) {
           await supabase.from('orders').insert({
             user_id: userId,
@@ -1190,7 +1186,6 @@ export default function App() {
           });
         }
 
-        // Re-fetch orders after sync to get correct DB IDs/Dates
         const { data: updatedOrders } = await supabase
           .from('orders')
           .select('*')
@@ -1210,8 +1205,11 @@ export default function App() {
       }
       
       setOrderHistory(dbOrders);
+      setLastSynced(new Date());
     } catch (error) {
       console.error('Error fetching/syncing user data:', error);
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -1732,6 +1730,7 @@ export default function App() {
     setFavorites(newFavorites);
 
     if (user && supabase) {
+      setIsSyncing(true);
       try {
         if (isFavorite) {
           const { error } = await supabase
@@ -1739,7 +1738,6 @@ export default function App() {
             .delete()
             .match({ user_id: user.id, item_id: id });
           if (error) throw error;
-          console.log('Successfully removed favorite from DB');
         } else {
           const { error } = await supabase
             .from('favorites')
@@ -1748,15 +1746,19 @@ export default function App() {
               { onConflict: 'user_id,item_id' }
             );
           if (error) throw error;
-          console.log('Successfully added favorite to DB');
         }
+        setLastSynced(new Date());
       } catch (err) {
         console.error('Supabase favorites sync error:', err);
+      } finally {
+        setIsSyncing(false);
       }
     }
   }, [favorites, user]);
 
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
   const checkout = async () => {
     if (cart.length === 0) return;
@@ -1769,6 +1771,7 @@ export default function App() {
     // Create Supabase persistence function
     const persistToSupabase = async () => {
       if (user && supabase) {
+        setIsSyncing(true);
         try {
           const { error } = await supabase
             .from('orders')
@@ -1782,9 +1785,11 @@ export default function App() {
               }
             });
           if (error) throw error;
-          console.log('Order successfully persisted to Supabase');
+          setLastSynced(new Date());
         } catch (err) {
           console.error('Supabase order persistence error:', err);
+        } finally {
+          setIsSyncing(false);
         }
       }
     };
@@ -1960,6 +1965,34 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans text-[var(--text-color)] overflow-x-hidden selection:bg-[var(--accent-color)]/30 bg-[var(--bg-color)]">
+      {/* Sync Status Badge */}
+      <AnimatePresence>
+        {user && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none"
+          >
+            <div className="glass rounded-full px-4 py-1.5 flex items-center gap-2 border border-[var(--text-color)]/10 shadow-lg">
+              <motion.div
+                animate={isSyncing ? { rotate: 360 } : {}}
+                transition={isSyncing ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+              >
+                {isSyncing ? (
+                  <RefreshCw size={12} className="text-[var(--accent-color)]" />
+                ) : (
+                  <Cloud size={12} className="text-emerald-400" />
+                )}
+              </motion.div>
+              <span className="text-[10px] uppercase tracking-widest font-bold opacity-60">
+                {isSyncing ? (language === 'en' ? 'Syncing...' : language === 'ar' ? 'جاري المزامنة...' : 'خەریکی زانینە...') : (language === 'en' ? 'Saved' : language === 'ar' ? 'تم الحفظ' : 'پارێزراوە')}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {showIntro ? (
           <motion.div
