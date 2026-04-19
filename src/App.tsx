@@ -1068,9 +1068,10 @@ export default function App() {
   const [recommendedIds, setRecommendedIds] = useState<string[]>([]);
   const [showBars, setShowBars] = useState(true);
   
-  // Refs to avoid stale closures in auth listener
+  // Refs to avoid stale closures
   const favoritesRef = React.useRef(favorites);
   const orderHistoryRef = React.useRef(orderHistory);
+  const userRef = React.useRef(user);
 
   useEffect(() => {
     favoritesRef.current = favorites;
@@ -1079,6 +1080,10 @@ export default function App() {
   useEffect(() => {
     orderHistoryRef.current = orderHistory;
   }, [orderHistory]);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   // Language & RTL Effect
   useEffect(() => {
@@ -1727,15 +1732,26 @@ export default function App() {
     setFavorites(newFavorites);
 
     if (user && supabase) {
-      if (isFavorite) {
-        await supabase
-          .from('favorites')
-          .delete()
-          .match({ user_id: user.id, item_id: id });
-      } else {
-        await supabase
-          .from('favorites')
-          .upsert({ user_id: user.id, item_id: id });
+      try {
+        if (isFavorite) {
+          const { error } = await supabase
+            .from('favorites')
+            .delete()
+            .match({ user_id: user.id, item_id: id });
+          if (error) throw error;
+          console.log('Successfully removed favorite from DB');
+        } else {
+          const { error } = await supabase
+            .from('favorites')
+            .upsert(
+              { user_id: user.id, item_id: id },
+              { onConflict: 'user_id,item_id' }
+            );
+          if (error) throw error;
+          console.log('Successfully added favorite to DB');
+        }
+      } catch (err) {
+        console.error('Supabase favorites sync error:', err);
       }
     }
   }, [favorites, user]);
@@ -1750,6 +1766,29 @@ export default function App() {
     const orderDate = new Date().toLocaleString();
     const total = calculateTotal();
     
+    // Create Supabase persistence function
+    const persistToSupabase = async () => {
+      if (user && supabase) {
+        try {
+          const { error } = await supabase
+            .from('orders')
+            .insert({
+              user_id: user.id,
+              total,
+              order_data: {
+                items: cart,
+                tableNumber: orderType === 'dine-in' ? tableNumber : undefined,
+                orderType
+              }
+            });
+          if (error) throw error;
+          console.log('Order successfully persisted to Supabase');
+        } catch (err) {
+          console.error('Supabase order persistence error:', err);
+        }
+      }
+    };
+
     // Prepare Telegram message
     let message = `🆕 *New Order: #${orderId}*\n`;
     message += `📅 Date: ${orderDate}\n`;
@@ -1806,20 +1845,8 @@ export default function App() {
       setShowOrderSuccess(true);
       setTimeout(() => setShowOrderSuccess(false), 3000);
 
-      // Persist to Supabase if logged in
-      if (user && supabase) {
-        await supabase
-          .from('orders')
-          .insert({
-            user_id: user.id,
-            total,
-            order_data: {
-              items: cart,
-              tableNumber: orderType === 'dine-in' ? tableNumber : undefined,
-              orderType
-            }
-          });
-      }
+      // Persist to Supabase
+      await persistToSupabase();
     } catch (error) {
       console.error('Error sending order:', error);
       // Even if Telegram fails, we still process the order locally for the demo
@@ -1836,6 +1863,9 @@ export default function App() {
       setIsCartOpen(false);
       setShowOrderSuccess(true);
       setTimeout(() => setShowOrderSuccess(false), 3000);
+      
+      // Still try to persist to Supabase even if Telegram failed
+      await persistToSupabase();
     } finally {
       setIsOrdering(false);
     }
