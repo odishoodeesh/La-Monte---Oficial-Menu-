@@ -1985,34 +1985,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans text-[var(--text-color)] overflow-x-hidden selection:bg-[var(--accent-color)]/30 bg-[var(--bg-color)]">
-      {/* Sync Status Badge */}
-      <AnimatePresence>
-        {user && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none"
-          >
-            <div className="glass rounded-full px-4 py-1.5 flex items-center gap-2 border border-[var(--text-color)]/10 shadow-lg">
-              <motion.div
-                animate={isSyncing ? { rotate: 360 } : {}}
-                transition={isSyncing ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
-              >
-                {isSyncing ? (
-                  <RefreshCw size={12} className="text-[var(--accent-color)]" />
-                ) : (
-                  <Cloud size={12} className="text-emerald-400" />
-                )}
-              </motion.div>
-              <span className="text-[10px] uppercase tracking-widest font-bold opacity-60">
-                {isSyncing ? (language === 'en' ? 'Syncing...' : language === 'ar' ? 'جاري المزامنة...' : 'خەریکی زانینە...') : (language === 'en' ? 'Saved' : language === 'ar' ? 'تم الحفظ' : 'پارێزراوە')}
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <AnimatePresence mode="wait">
         {showIntro ? (
           <motion.div
@@ -2118,38 +2090,6 @@ export default function App() {
                   >
                     <UserIcon size={14} />
                     {t.profile}
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setIsReservationOpen(true)}
-                    className={`transition-colors flex items-center gap-2 ${isReservationOpen ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
-                  >
-                    <Calendar size={14} />
-                    {t.reserve}
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setIsMagicWorldOpen(true)}
-                    className="transition-colors hidden items-center gap-2 hover:text-yellow-400"
-                  >
-                    <Sparkles size={14} className="text-yellow-400" />
-                    Magic
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => {
-                      if (user) {
-                        supabase?.auth.signOut();
-                      } else {
-                        setIsAuthOpen(true);
-                      }
-                    }}
-                    className="transition-colors flex items-center gap-2 hover:text-[var(--text-color)]"
-                  >
-                    {user ? <LogOut size={14} /> : <UserIcon size={14} />}
-                    <span className="sr-only md:not-sr-only">
-                      {user ? (profile?.username ? `@${profile.username}` : t.auth.logout) : t.auth.login}
-                    </span>
                   </motion.button>
                 </nav>
               </div>
