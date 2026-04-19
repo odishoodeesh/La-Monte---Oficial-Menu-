@@ -1126,104 +1126,42 @@ export default function App() {
     if (!supabase) return;
     setIsSyncing(true);
     
-    // 1. Fetch/Sync Profile
     try {
+      // 1. Fetch Everything from Profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('username, email')
+        .select('username, email, favorites, history')
         .eq('id', userId)
         .single();
       
       if (profileData) {
-        setProfile(profileData);
-      } else if (profileError?.code === 'PGRST116') {
-        console.log('Profile record not found for user');
-      }
-    } catch (err) {
-      console.warn('Profile fetch failed:', err);
-    }
-
-    // 2. Fetch/Merge Favorites
-    try {
-      const { data: favs } = await supabase
-        .from('profile_favorites')
-        .select('item_id')
-        .eq('user_id', userId);
-      
-      let dbFavorites: string[] = favs ? favs.map(f => f.item_id) : [];
-      
-      // Merge guest favorites if any
-      if (currentLocalFavorites && currentLocalFavorites.length > 0) {
-        const localFavoritesToSync = currentLocalFavorites.filter(id => !dbFavorites.includes(id));
-        if (localFavoritesToSync.length > 0) {
-          await supabase
-            .from('profile_favorites')
-            .upsert(localFavoritesToSync.map(id => ({ user_id: userId, item_id: id })), { onConflict: 'user_id,item_id' });
-          dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
-        }
-      }
-      setFavorites(dbFavorites);
-    } catch (err) {
-      console.error('Favorites sync failed:', err);
-    }
-
-    // 3. Fetch/Merge Orders
-    try {
-      const { data: orders } = await supabase
-        .from('profile_history')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-      
-      let dbOrders = orders ? orders.map(o => ({
-        id: o.id,
-        date: new Date(o.created_at).toLocaleString(),
-        items: o.order_data?.items || [],
-        total: o.total || '0',
-        tableNumber: o.order_data?.tableNumber,
-        orderType: o.order_data?.orderType
-      })) : [];
-
-      // Merge guest orders if any
-      if (currentLocalOrders && currentLocalOrders.length > 0) {
-        const localOnlyOrders = currentLocalOrders.filter(lo => !dbOrders.some(dbo => dbo.id === lo.id));
+        setProfile({ username: profileData.username, email: profileData.email });
         
-        if (localOnlyOrders.length > 0) {
-          for (const localOrder of localOnlyOrders) {
-            await supabase.from('profile_history').insert({
-              user_id: userId,
-              total: localOrder.total,
-              order_data: {
-                items: localOrder.items,
-                tableNumber: localOrder.tableNumber,
-                orderType: localOrder.orderType
-              }
-            });
-          }
+        // Handle Favorites
+        let cloudFavorites: string[] = Array.isArray(profileData.favorites) ? profileData.favorites : [];
+        if (currentLocalFavorites && currentLocalFavorites.length > 0) {
+          // Merge guest data
+          cloudFavorites = [...new Set([...cloudFavorites, ...currentLocalFavorites])];
+          // Save merged data back to cloud
+          await supabase.from('profiles').update({ favorites: cloudFavorites }).eq('id', userId);
+        }
+        setFavorites(cloudFavorites);
 
-          // Refetch to get IDs and final state
-          const { data: updatedOrders } = await supabase
-            .from('profile_history')
-            .select('*')
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false });
-          
-          if (updatedOrders) {
-            dbOrders = updatedOrders.map(o => ({
-              id: o.id,
-              date: new Date(o.created_at).toLocaleString(),
-              items: o.order_data?.items || [],
-              total: o.total || '0',
-              tableNumber: o.order_data?.tableNumber,
-              orderType: o.order_data?.orderType
-            }));
+        // Handle History
+        let cloudHistory = Array.isArray(profileData.history) ? profileData.history : [];
+        if (currentLocalOrders && currentLocalOrders.length > 0) {
+          // Merge guest orders
+          const localOnlyOrders = currentLocalOrders.filter(lo => !cloudHistory.some((dbo: any) => dbo.id === lo.id));
+          if (localOnlyOrders.length > 0) {
+            cloudHistory = [...localOnlyOrders, ...cloudHistory];
+            // Save merged history back to cloud
+            await supabase.from('profiles').update({ history: cloudHistory }).eq('id', userId);
           }
         }
+        setOrderHistory(cloudHistory);
       }
-      
-      setOrderHistory(dbOrders);
     } catch (err) {
-      console.error('Orders sync failed:', err);
+      console.error('UserData fetch/sync failed:', err);
     }
 
     setLastSynced(new Date());
@@ -1756,24 +1694,15 @@ export default function App() {
     if (user && supabase) {
       setIsSyncing(true);
       try {
-        if (isFavorite) {
-          const { error } = await supabase
-            .from('profile_favorites')
-            .delete()
-            .match({ user_id: user.id, item_id: id });
-          if (error) throw error;
-        } else {
-          const { error } = await supabase
-            .from('profile_favorites')
-            .upsert(
-              { user_id: user.id, item_id: id },
-              { onConflict: 'user_id,item_id' }
-            );
-          if (error) throw error;
-        }
+        const { error } = await supabase
+          .from('profiles')
+          .update({ favorites: newFavorites })
+          .eq('id', user.id);
+        
+        if (error) throw error;
         setLastSynced(new Date());
       } catch (err) {
-        console.error('Supabase favorites sync error:', err);
+        console.error('Supabase favorites update error:', err);
       } finally {
         setIsSyncing(false);
       }
@@ -1789,25 +1718,25 @@ export default function App() {
     const total = calculateTotal();
     
     // Create Supabase persistence function
-    const persistToSupabase = async () => {
+    const persistToSupabase = async (newOrder: any) => {
       if (user && supabase) {
         setIsSyncing(true);
         try {
+          // Fetch current history first to append
+          const { data } = await supabase.from('profiles').select('history').eq('id', user.id).single();
+          const currentHistory = Array.isArray(data?.history) ? data.history : [];
+          
           const { error } = await supabase
-            .from('profile_history')
-            .insert({
-              user_id: user.id,
-              total,
-              order_data: {
-                items: cart,
-                tableNumber: orderType === 'dine-in' ? tableNumber : undefined,
-                orderType
-              }
-            });
+            .from('profiles')
+            .update({ 
+              history: [newOrder, ...currentHistory] 
+            })
+            .eq('id', user.id);
+            
           if (error) throw error;
           setLastSynced(new Date());
         } catch (err) {
-          console.error('Supabase order persistence error:', err);
+          console.error('Supabase history update error:', err);
         } finally {
           setIsSyncing(false);
         }
@@ -1870,8 +1799,8 @@ export default function App() {
       setShowOrderSuccess(true);
       setTimeout(() => setShowOrderSuccess(false), 3000);
 
-      // Persist to Supabase
-      await persistToSupabase();
+      // Persist directly into Profile Table
+      await persistToSupabase(newOrder);
     } catch (error) {
       console.error('Error sending order:', error);
       // Even if Telegram fails, we still process the order locally for the demo
