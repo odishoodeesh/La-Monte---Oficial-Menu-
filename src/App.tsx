@@ -1128,11 +1128,27 @@ export default function App() {
     
     try {
       // 1. Fetch Everything from Profile
-      const { data: profileData, error: profileError } = await supabase
+      let { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('username, email, favorites, history')
         .eq('id', userId)
         .single();
+      
+      // If profile doesn't exist, create it
+      if (profileError?.code === 'PGRST116' || !profileData) {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user) {
+          const newProfile = {
+            id: userId,
+            email: userData.user.email || '',
+            username: userData.user.user_metadata?.username || userData.user.email?.split('@')[0] || 'user',
+            favorites: currentLocalFavorites || [],
+            history: currentLocalOrders || []
+          };
+          const { data: created } = await supabase.from('profiles').insert(newProfile).select().single();
+          profileData = created;
+        }
+      }
       
       if (profileData) {
         setProfile({ username: profileData.username, email: profileData.email });
@@ -1140,9 +1156,7 @@ export default function App() {
         // Handle Favorites
         let cloudFavorites: string[] = Array.isArray(profileData.favorites) ? profileData.favorites : [];
         if (currentLocalFavorites && currentLocalFavorites.length > 0) {
-          // Merge guest data
           cloudFavorites = [...new Set([...cloudFavorites, ...currentLocalFavorites])];
-          // Save merged data back to cloud
           await supabase.from('profiles').update({ favorites: cloudFavorites }).eq('id', userId);
         }
         setFavorites(cloudFavorites);
@@ -1150,11 +1164,9 @@ export default function App() {
         // Handle History
         let cloudHistory = Array.isArray(profileData.history) ? profileData.history : [];
         if (currentLocalOrders && currentLocalOrders.length > 0) {
-          // Merge guest orders
           const localOnlyOrders = currentLocalOrders.filter(lo => !cloudHistory.some((dbo: any) => dbo.id === lo.id));
           if (localOnlyOrders.length > 0) {
             cloudHistory = [...localOnlyOrders, ...cloudHistory];
-            // Save merged history back to cloud
             await supabase.from('profiles').update({ history: cloudHistory }).eq('id', userId);
           }
         }
@@ -1162,10 +1174,10 @@ export default function App() {
       }
     } catch (err) {
       console.error('UserData fetch/sync failed:', err);
+    } finally {
+      setIsSyncing(false);
+      setLastSynced(new Date());
     }
-
-    setLastSynced(new Date());
-    setIsSyncing(false);
   };
 
   const t = {
@@ -1803,7 +1815,6 @@ export default function App() {
       await persistToSupabase(newOrder);
     } catch (error) {
       console.error('Error sending order:', error);
-      // Even if Telegram fails, we still process the order locally for the demo
       const newOrder = {
         id: orderId,
         date: orderDate,
@@ -1818,8 +1829,8 @@ export default function App() {
       setShowOrderSuccess(true);
       setTimeout(() => setShowOrderSuccess(false), 3000);
       
-      // Still try to persist to Supabase even if Telegram failed
-      await persistToSupabase();
+      // Still try to persist to Supabase
+      await persistToSupabase(newOrder);
     } finally {
       setIsOrdering(false);
     }
