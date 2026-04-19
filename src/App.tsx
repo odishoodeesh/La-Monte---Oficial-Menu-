@@ -1137,31 +1137,29 @@ export default function App() {
       if (profileData) {
         setProfile(profileData);
       } else if (profileError?.code === 'PGRST116') {
-        // Profile doesn't exist yet, we could try to create it or just leave it null
         console.log('Profile record not found for user');
       }
     } catch (err) {
-      console.warn('Profile fetch failed, continuing with other data:', err);
+      console.warn('Profile fetch failed:', err);
     }
 
     // 2. Fetch/Merge Favorites
     try {
       const { data: favs } = await supabase
-        .from('favorites')
+        .from('profile_favorites')
         .select('item_id')
         .eq('user_id', userId);
       
       let dbFavorites: string[] = favs ? favs.map(f => f.item_id) : [];
       
+      // Merge guest favorites if any
       if (currentLocalFavorites && currentLocalFavorites.length > 0) {
         const localFavoritesToSync = currentLocalFavorites.filter(id => !dbFavorites.includes(id));
         if (localFavoritesToSync.length > 0) {
           await supabase
-            .from('favorites')
+            .from('profile_favorites')
             .upsert(localFavoritesToSync.map(id => ({ user_id: userId, item_id: id })), { onConflict: 'user_id,item_id' });
           dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
-        } else {
-           dbFavorites = [...new Set([...dbFavorites, ...currentLocalFavorites])];
         }
       }
       setFavorites(dbFavorites);
@@ -1172,7 +1170,7 @@ export default function App() {
     // 3. Fetch/Merge Orders
     try {
       const { data: orders } = await supabase
-        .from('orders')
+        .from('profile_history')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
@@ -1181,17 +1179,18 @@ export default function App() {
         id: o.id,
         date: new Date(o.created_at).toLocaleString(),
         items: o.order_data?.items || [],
-        total: o.total || o.total_amount || '0',
+        total: o.total || '0',
         tableNumber: o.order_data?.tableNumber,
         orderType: o.order_data?.orderType
       })) : [];
 
+      // Merge guest orders if any
       if (currentLocalOrders && currentLocalOrders.length > 0) {
         const localOnlyOrders = currentLocalOrders.filter(lo => !dbOrders.some(dbo => dbo.id === lo.id));
         
         if (localOnlyOrders.length > 0) {
           for (const localOrder of localOnlyOrders) {
-            await supabase.from('orders').insert({
+            await supabase.from('profile_history').insert({
               user_id: userId,
               total: localOrder.total,
               order_data: {
@@ -1202,8 +1201,9 @@ export default function App() {
             });
           }
 
+          // Refetch to get IDs and final state
           const { data: updatedOrders } = await supabase
-            .from('orders')
+            .from('profile_history')
             .select('*')
             .eq('user_id', userId)
             .order('created_at', { ascending: false });
@@ -1213,7 +1213,7 @@ export default function App() {
               id: o.id,
               date: new Date(o.created_at).toLocaleString(),
               items: o.order_data?.items || [],
-              total: o.total || o.total_amount || '0',
+              total: o.total || '0',
               tableNumber: o.order_data?.tableNumber,
               orderType: o.order_data?.orderType
             }));
@@ -1758,13 +1758,13 @@ export default function App() {
       try {
         if (isFavorite) {
           const { error } = await supabase
-            .from('favorites')
+            .from('profile_favorites')
             .delete()
             .match({ user_id: user.id, item_id: id });
           if (error) throw error;
         } else {
           const { error } = await supabase
-            .from('favorites')
+            .from('profile_favorites')
             .upsert(
               { user_id: user.id, item_id: id },
               { onConflict: 'user_id,item_id' }
@@ -1794,7 +1794,7 @@ export default function App() {
         setIsSyncing(true);
         try {
           const { error } = await supabase
-            .from('orders')
+            .from('profile_history')
             .insert({
               user_id: user.id,
               total,
