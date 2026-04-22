@@ -244,7 +244,7 @@ const MenuItemCard = memo(({
             )}
 
             <img 
-              src={item.image} 
+              src={item.thumbnail || item.image} 
               alt={getLabel(item, 'name', language)}
               loading="lazy"
               referrerPolicy="no-referrer"
@@ -268,7 +268,7 @@ const MenuItemCard = memo(({
         <>
           <div className="w-32 h-full flex-shrink-0 bg-black/5 p-4">
             <img 
-              src={item.image} 
+              src={item.thumbnail || item.image} 
               alt={getLabel(item, 'name', language)}
               loading="lazy"
               referrerPolicy="no-referrer"
@@ -299,7 +299,7 @@ const MenuItemCard = memo(({
         <>
           <div className="relative w-full aspect-square overflow-hidden bg-black/5 p-2 rounded-xl">
             <img 
-              src={item.image} 
+              src={item.thumbnail || item.image} 
               alt={item.name}
               loading="lazy"
               referrerPolicy="no-referrer"
@@ -322,7 +322,7 @@ const MenuItemCard = memo(({
         <>
           <div className="relative w-full aspect-square overflow-hidden bg-black/5 p-1 rounded-lg">
             <img 
-              src={item.image} 
+              src={item.thumbnail || item.image} 
               alt={item.name}
               loading="lazy"
               referrerPolicy="no-referrer"
@@ -344,7 +344,7 @@ const MenuItemCard = memo(({
               className="relative w-full max-w-sm aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10"
             >
               <img 
-                src={item.image} 
+                src={item.thumbnail || item.image} 
                 alt={item.name}
                 loading="lazy"
                 referrerPolicy="no-referrer"
@@ -712,7 +712,7 @@ const MagicWorld = ({
                       className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl cursor-zoom-in relative group"
                     >
                       <img 
-                        src={recommendation.image} 
+                        src={recommendation.thumbnail || recommendation.image} 
                         alt={recommendation.name} 
                         loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -1241,6 +1241,9 @@ export default function App() {
         'Iced Tea': 'Iced Tea',
         'Tea': 'Tea',
         'Water': 'Water',
+        'Matcha': 'Matcha',
+        'Milk': 'Milk',
+        'Hot Chocolate': 'Hot Chocolate',
         'Sweets & Cake': 'Sweets & Cake',
         'Toasts': 'Toasts'
       },
@@ -1353,6 +1356,9 @@ export default function App() {
         'Iced Tea': 'ایس تی',
         'Tea': 'چای',
         'Water': 'ئاو',
+        'Matcha': 'ماچای',
+        'Milk': 'شیر',
+        'Hot Chocolate': 'شۆکۆلاتەی گەرم',
         'Sweets & Cake': 'شیرینی و کێک',
         'Toasts': 'تۆست'
       },
@@ -1465,6 +1471,9 @@ export default function App() {
         'Iced Tea': 'آيس تي',
         'Tea': 'شاي',
         'Water': 'ماء',
+        'Matcha': 'ماتشا',
+        'Milk': 'حليب',
+        'Hot Chocolate': 'شوكولاتة ساخنة',
         'Sweets & Cake': 'حلويات وكيك',
         'Toasts': 'توست'
       },
@@ -1912,8 +1921,12 @@ export default function App() {
     { name: 'Refreshing Drinks', icon: Wind, main: 'Drinks' },
     { name: 'Fresh Juice', icon: Droplets, main: 'Drinks' },
     { name: 'Detox', icon: Leaf, main: 'Drinks' },
+    { name: 'Iced Tea', icon: Coffee, main: 'Drinks' },
     { name: 'Tea', icon: Coffee, main: 'Drinks' },
+    { name: 'Milk', icon: GlassWater, main: 'Drinks' },
+    { name: 'Hot Chocolate', icon: Coffee, main: 'Drinks' },
     { name: 'Water', icon: Droplets, main: 'Drinks' },
+    { name: 'Matcha', icon: Leaf, main: 'Drinks' },
     { name: 'Shisha', icon: Flame, main: 'Shisha' },
     { name: 'Sweets & Cake', icon: Cookie, main: 'Food' },
     { name: 'Toasts', icon: Sandwich, main: 'Food' },
@@ -2351,7 +2364,7 @@ export default function App() {
                                             whileHover={{ y: -8, zIndex: 10, scale: 1.1 }}
                                             className="w-14 h-14 rounded-full border-[3px] border-[#0A0A0B] overflow-hidden bg-white/5 shadow-lg cursor-pointer"
                                           >
-                                            <img src={item.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                            <img src={item.thumbnail || item.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                           </motion.div>
                                         ))}
                                         {order.items.length > 5 && (
@@ -2692,7 +2705,7 @@ export default function App() {
                         cart.map((item, idx) => (
                           <div key={`${item.id}-${idx}`} className="flex gap-3 group">
                             <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-black/5">
-                              <img src={item.image} alt="" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                              <img src={item.thumbnail || item.image} alt="" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                             </div>
                             <div className="flex-grow">
                               <div className="flex justify-between items-start mb-0.5">

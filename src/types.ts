@@ -19,6 +19,9 @@ export type Category =
   | 'Tea' 
   | 'Water' 
   | 'Shisha' 
+  | 'Matcha'
+  | 'Milk'
+  | 'Hot Chocolate'
   | 'Sweets & Cake' 
   | 'Toasts';
 
@@ -31,6 +34,7 @@ export interface MenuItem {
   category: Category;
   mainCategory: MainCategory;
   image: string;
+  thumbnail?: string;
   description: string;
   descKu?: string;
   descAr?: string;
