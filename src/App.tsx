@@ -1245,7 +1245,8 @@ export default function App() {
         'Milk': 'Milk',
         'Hot Chocolate': 'Hot Chocolate',
         'Sweets & Cake': 'Sweets & Cake',
-        'Toasts': 'Toasts'
+        'Toasts': 'Toasts',
+        'COOKIES': 'Cookies'
       },
       quick_filters: {
         'All': 'All',
@@ -1360,7 +1361,8 @@ export default function App() {
         'Milk': 'شیر',
         'Hot Chocolate': 'شۆکۆلاتەی گەرم',
         'Sweets & Cake': 'شیرینی و کێک',
-        'Toasts': 'تۆست'
+        'Toasts': 'تۆست',
+        'COOKIES': 'کۆکیز'
       },
       quick_filters: {
         'All': 'هەمووی',
@@ -1475,7 +1477,8 @@ export default function App() {
         'Milk': 'حليب',
         'Hot Chocolate': 'شوكولاتة ساخنة',
         'Sweets & Cake': 'حلويات وكيك',
-        'Toasts': 'توست'
+        'Toasts': 'توست',
+        'COOKIES': 'كوكيز'
       },
       quick_filters: {
         'All': 'الكل',
@@ -1930,6 +1933,7 @@ export default function App() {
     { name: 'Shisha', icon: Flame, main: 'Shisha' },
     { name: 'Sweets & Cake', icon: Cookie, main: 'Food' },
     { name: 'Toasts', icon: Sandwich, main: 'Food' },
+    { name: 'COOKIES', icon: Cookie, main: 'Food' },
   ];
 
   const filteredCategories = categories.filter(cat => cat.main === activeMainCategory);

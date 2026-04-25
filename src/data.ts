@@ -31,7 +31,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'Americano',
     nameAr: 'امريكانو',
     nameKu: 'امێریکانۆ',
-    price: '4,500 IQD',
+    price: '5,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/7dWCGJ3c/la-monte-americano-1.png',
@@ -47,7 +47,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/svFTHJvq/la-monte-cappuccino.png',
-    thumbnail: 'https://i.ibb.co/LXtRCzTw/la-monte-americano-1.png',
+    thumbnail: 'https://i.ibb.co/6R4KBJRF/la-monte-cappuccino.png',
     description: 'Espresso with steamed milk and foam.'
   },
   {
@@ -91,7 +91,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'Vanilla Latte',
     nameAr: 'فانيلا لاتيه',
     nameKu: 'ڤانێلا لاتێ',
-    price: '5,500 IQD',
+    price: '6,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/C5dt1CNt/la-monte-vanilla-latte-1.png',
@@ -103,7 +103,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'IRISH CARAMEL LATTE',
     nameAr: 'آيريش كاراميل لاتيه',
     nameKu: 'أیریش کارامێل لاتێ',
-    price: '5,500 IQD',
+    price: '6,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/TD9FRgkR/la-monte-irish-caramel-latte.png',
@@ -139,7 +139,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'CARAMEL LATTE',
     nameAr: 'كاراميل لاتيه',
     nameKu: 'کارامێل لاتێ',
-    price: '5,500 IQD',
+    price: '6,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/21rnh8c7/la-monte-latte-caramel.png',
@@ -155,7 +155,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/LXqCb5vz/la-monte-la-monte-latte.png',
-    thumbnail: 'https://i.ibb.co/8LwKszPD/la-monte-latte-caramel.png',
+    thumbnail: 'https://i.ibb.co/Vchvrm3W/la-monte-la-monte-latte.png',
     description: 'Sweetened condensed milk latte.'
   },
   {
@@ -175,7 +175,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'COCONUT LATTE',
     nameAr: 'كوكونات لايه',
     nameKu: 'کۆکۆنەت لاتێ',
-    price: '5,500 IQD',
+    price: '6,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/mF4M4vpw/la-monte-coconut-latte.png',
@@ -187,7 +187,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'CANNELA LATTE',
     nameAr: 'كانيلا لاتيه',
     nameKu: 'کانیلا لاتێ',
-    price: '5,500 IQD',
+    price: '6,000 IQD',
     category: 'Hot Drinks',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/BKgVbKFZ/la-monte-cannela-latte.png',
@@ -225,15 +225,6 @@ export const MENU_ITEMS: MenuItem[] = [
     image: 'https://i.ibb.co/VpYfFm1W/la-monte-pistachio-coffee.png',
     thumbnail: 'https://i.ibb.co/84g1ycCD/la-monte-pistachio-coffee.png',
     description: 'Coffee with pistachio flavor.'
-  },
-  {
-    id: 'h20',
-    name: 'MENENGIÇ COFFEE',
-    price: '3,000 IQD',
-    category: 'Hot Drinks',
-    mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/9H2hx0dX/la-monte-honey-1.png',
-    description: 'Traditional wild pistachio coffee.'
   },
   {
     id: 'h21',
@@ -1423,5 +1414,37 @@ export const MENU_ITEMS: MenuItem[] = [
     image: 'https://i.ibb.co/pBSMWtJX/la-monte-smoked-turkey.png',
     thumbnail: 'https://i.ibb.co/KpJfNMFy/la-monte-smoked-turkey.png',
     description: 'Smoked turkey sandwich.'
+  },
+
+  // COOKIES
+  {
+    id: 'cook1',
+    name: 'DOUBLE CHOCOLATE CHIP AMERICAN COOKIE',
+    price: '2,500 IQD',
+    category: 'COOKIES',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/xK88Pvjh/la-monte-double-chocolate-chip-american-cookie-1.png',
+    thumbnail: 'https://i.ibb.co/rKffTP6k/la-monte-double-chocolate-chip-american-cookie-1.png',
+    description: 'Rich American cookie with double chocolate chips.'
+  },
+  {
+    id: 'cook2',
+    name: 'WHITE CHOCOLATE CHIP AMERICAN COOKIE WITH CRANBERRIES',
+    price: '2,500 IQD',
+    category: 'COOKIES',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/jP6C0Ghp/la-monte-white-chocolate-chip-american-cookie-with-cranberries-1.png',
+    thumbnail: 'https://i.ibb.co/mVDnZtJx/la-monte-white-chocolate-chip-american-cookie-with-cranberries-1.png',
+    description: 'American cookie with white chocolate chips and tangy cranberries.'
+  },
+  {
+    id: 'cook3',
+    name: 'CHOCOLATE CHIP AMERICAN COOKIE',
+    price: '2,500 IQD',
+    category: 'COOKIES',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/8nWSGjYv/la-monte-chocolate-chip-american-cookie.png',
+    thumbnail: 'https://i.ibb.co/Q721h6DS/la-monte-chocolate-chip-american-cookie.png',
+    description: 'Classic American cookie with chocolate chips.'
   }
 ];
