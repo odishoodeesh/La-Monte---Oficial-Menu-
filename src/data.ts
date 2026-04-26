@@ -196,7 +196,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'h17',
-    name: 'LAMONTE',
+    name: 'LAMONTE LATTE',
     nameAr: 'لامونتي',
     nameKu: 'لامۆنتێ',
     price: '6,000 IQD',
@@ -235,16 +235,6 @@ export const MENU_ITEMS: MenuItem[] = [
     image: 'https://i.ibb.co/WvHF2V6c/la-monte-v60.png',
     thumbnail: 'https://i.ibb.co/60ybWXm4/la-monte-v60.png',
     description: 'Hand-brewed filter coffee.'
-  },
-  {
-    id: 'h22',
-    name: 'HOT CHOCOLATE MARSHMALLOW',
-    price: '6,000 IQD',
-    category: 'Hot Drinks',
-    mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/Zp0N1N4c/la-monte-hot-chocolate.png',
-    thumbnail: 'https://i.ibb.co/9k7G3GKy/la-monte-hot-chocolate.png',
-    description: 'Classic hot chocolate with marshmallows.'
   },
   {
     id: 'h23',
@@ -421,7 +411,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'c17',
-    name: 'LAMONTE',
+    name: 'LAMONTE ICED LATTE',
     price: '6,000 IQD',
     category: 'Cold Drinks',
     mainCategory: 'Drinks',
@@ -514,7 +504,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'f5',
-    name: 'LAMONTE',
+    name: 'LAMONTE FRAPPE',
     price: '6,000 IQD',
     category: 'Coffee Frappe',
     mainCategory: 'Drinks',
@@ -1095,7 +1085,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '5,000 IQD',
     category: 'Tea',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/35tQ9rd/la-monte-herbs-tea.png',
+    image: 'https://i.ibb.co/35tQ9krd/la-monte-herbs-tea.png',
     thumbnail: 'https://i.ibb.co/SDqG4Jsy/la-monte-herbs-tea.png',
     description: 'Mixed herbal tea.'
   },
@@ -1287,7 +1277,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'sh3',
-    name: 'LAMONTE',
+    name: 'LAMONTE SHISHA',
     price: '10,000 IQD',
     category: 'Shisha',
     mainCategory: 'Shisha',
@@ -1327,7 +1317,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'sh7',
-    name: 'SHIHA',
+    name: 'SHISHA',
     price: '5,000 IQD',
     category: 'Shisha',
     mainCategory: 'Shisha',
