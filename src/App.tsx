@@ -264,7 +264,6 @@ const MenuItemCard = memo(({
               </div>
               <div className="flex justify-between items-end">
                 <span className="text-sm font-medium">{item.price}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">{t.checkout}</span>
               </div>
             </div>
           </div>
@@ -303,7 +302,6 @@ const MenuItemCard = memo(({
               >
                 <Heart size={14} className={favorites.includes(item.id) ? 'fill-red-500 text-red-500' : ''} />
               </motion.button>
-              <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-20">{t.checkout}</span>
             </div>
           </div>
         </>
