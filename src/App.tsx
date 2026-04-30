@@ -22,7 +22,7 @@ import { Category, MenuItem, CartItem, MainCategory } from './types';
 import { MENU_ITEMS } from './data';
 import { fetchDuhokWeather, WeatherData } from './services/weatherService';
 
-type View = 'menu' | 'profile' | 'reservation';
+type View = 'menu' | 'profile' | 'reservation' | 'feedback';
 
 interface PaletteColors {
   bg: string;
@@ -1070,6 +1070,8 @@ export default function App() {
   const [recommendedIds, setRecommendedIds] = useState<string[]>([]);
   const [showBars, setShowBars] = useState(true);
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
+  const [isFeedbackSuccess, setIsFeedbackSuccess] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
   
@@ -1187,6 +1189,12 @@ export default function App() {
       favorites: 'Favorites',
       history: 'History',
       reserve: 'Reserve a Table',
+      feedback: 'Feedback',
+      feedback_desc: 'We value your thoughts. Let us know how we can improve.',
+      send_feedback: 'Send Feedback',
+      feedback_success: 'Thank you for your feedback!',
+      name_placeholder: 'Your Name',
+      message_placeholder: 'Your Message',
       magic: 'Magic World',
       theme: 'Change Theme',
       language: 'Language',
@@ -1304,6 +1312,12 @@ export default function App() {
       favorites: 'دڵخوازەکان',
       history: 'داواکارییەکان',
       reserve: 'حیجزکردنی مێز',
+      feedback: 'بۆچوونەکان',
+      feedback_desc: 'بۆچوونەکانتان جێگەی بایەخە لای ئێمە. پێمان بڵێن چۆن دەتوانین باشتر بین.',
+      send_feedback: 'ناردنی بۆچوون',
+      feedback_success: 'سوپاس بۆ بۆچوونەکەت!',
+      name_placeholder: 'ناوی تۆ',
+      message_placeholder: 'پەیامەکەت',
       magic: 'جیهانی سیحراوی',
       theme: 'گۆڕینی ڕەنگ',
       language: 'زمان',
@@ -1420,6 +1434,12 @@ export default function App() {
       favorites: 'المفضلات',
       history: 'سجل الطلبات',
       reserve: 'حجز طاولة',
+      feedback: 'ملاحظات',
+      feedback_desc: 'نحن نقدر أفكارك. أخبرنا كيف يمكننا التحسين.',
+      send_feedback: 'إرسال الملاحظات',
+      feedback_success: 'شكراً لملاحظاتك!',
+      name_placeholder: 'اسمك',
+      message_placeholder: 'رسالتك',
       magic: 'العالم السحري',
       theme: 'تغيير المظهر',
       language: 'اللغة',
@@ -2222,7 +2242,121 @@ export default function App() {
 
             <main className="pt-60 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
               <AnimatePresence mode="wait">
-                {currentView === 'profile' ? (
+                {currentView === 'feedback' ? (
+                  <motion.div
+                    key="feedback-view"
+                    initial={{ opacity: 0, scale: 0.98, y: 30 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.98, y: -30 }}
+                    className="max-w-2xl mx-auto w-full"
+                  >
+                    <div className="glass rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-color)]/10 rounded-full -mr-32 -mt-32 blur-[80px]" />
+                      
+                      <div className="relative z-10 text-center mb-10">
+                        <div className="w-16 h-16 bg-[var(--accent-color)]/20 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+                          <Mail size={32} className="text-[var(--accent-color)]" />
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-serif italic mb-4">{t.feedback}</h2>
+                        <p className="opacity-60 text-sm max-w-md mx-auto">{t.feedback_desc}</p>
+                      </div>
+
+                      <form 
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          const form = e.currentTarget;
+                          const formData = new FormData(form);
+                          const feedback = formData.get('feedback') as string;
+                          const name = formData.get('name') as string;
+
+                          if (!feedback) return;
+
+                          setIsFeedbackLoading(true);
+                          try {
+                            const response = await fetch('/api/feedback', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ feedback, name })
+                            });
+
+                            if (response.ok) {
+                              setIsFeedbackSuccess(true);
+                              form.reset();
+                              setTimeout(() => setIsFeedbackSuccess(false), 5000);
+                            } else {
+                              throw new Error('Failed to send feedback');
+                            }
+                          } catch (err) {
+                            console.error(err);
+                            alert('Failed to send feedback. Please try again later.');
+                          } finally {
+                            setIsFeedbackLoading(false);
+                          }
+                        }}
+                        className="space-y-6 relative z-10"
+                      >
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-4">{t.name_placeholder}</label>
+                          <input 
+                            name="name"
+                            type="text"
+                            defaultValue={profile?.username || user?.email?.split('@')[0] || ''}
+                            placeholder={t.name_placeholder}
+                            className="w-full glass-dark rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all border border-white/5"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-4">{t.message_placeholder}</label>
+                          <textarea 
+                            name="feedback"
+                            required
+                            rows={5}
+                            placeholder={t.message_placeholder}
+                            className="w-full glass-dark rounded-3xl px-6 py-5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all border border-white/5 resize-none"
+                          />
+                        </div>
+
+                        <motion.button
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          type="submit"
+                          disabled={isFeedbackLoading}
+                          className={`w-full py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                            isFeedbackLoading 
+                              ? 'bg-white/10 text-white/40 cursor-not-allowed' 
+                              : 'bg-[var(--text-color)] text-[var(--bg-color)] hover:opacity-90'
+                          }`}
+                        >
+                          {isFeedbackLoading ? (
+                            <>
+                              <RefreshCw size={16} className="animate-spin" />
+                              {t.auth.loading}
+                            </>
+                          ) : (
+                            <>
+                              <Mail size={16} />
+                              {t.send_feedback}
+                            </>
+                          )}
+                        </motion.button>
+
+                        <AnimatePresence>
+                          {isFeedbackSuccess && (
+                            <motion.p
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0 }}
+                              className="text-center text-emerald-500 text-xs font-bold uppercase tracking-widest mt-4"
+                            >
+                              {t.feedback_success}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </form>
+                    </div>
+                  </motion.div>
+                ) : currentView === 'profile' ? (
                   <motion.div
                     key="profile-view"
                     initial={{ opacity: 0, scale: 0.98, y: 30 }}
@@ -3364,6 +3498,14 @@ export default function App() {
                       >
                         <UserIcon size={18} className={currentView === 'profile' ? 'text-[var(--bg-color)]' : 'text-[var(--text-color)] opacity-60'} />
                         <span className="font-medium">{t.profile}</span>
+                      </motion.button>
+                      <motion.button 
+                        whileHover={{ x: 5 }}
+                        onClick={() => { setCurrentView('feedback'); setIsMobileMenuOpen(false); }}
+                        className={`flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all ${currentView === 'feedback' ? 'bg-[var(--text-color)] text-[var(--bg-color)]' : 'hover:bg-[var(--text-color)]/5'}`}
+                      >
+                        <Mail size={18} className={currentView === 'feedback' ? 'text-[var(--bg-color)]' : 'text-[var(--text-color)] opacity-60'} />
+                        <span className="font-medium">{t.feedback}</span>
                       </motion.button>
                       <motion.button 
                         whileHover={{ x: 5 }}

@@ -480,6 +480,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Coffee Frappe',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jZf24P8v/la-monte-frappe-mocha-dark.png',
+    thumbnail: '',
     description: 'Dark mocha frappe.'
   },
   {
@@ -504,7 +505,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'f5',
-    name: 'LAMONTE FRAPPE',
+    name: 'FRAPPE LAMONTE',
     price: '6,000 IQD',
     category: 'Coffee Frappe',
     mainCategory: 'Drinks',
