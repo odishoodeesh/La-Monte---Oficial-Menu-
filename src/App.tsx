@@ -254,7 +254,14 @@ const MenuItemCard = memo(({
 
           <div className="p-4 flex-grow flex flex-col justify-between">
             <div className="flex flex-col gap-1">
-              <h3 className="text-base font-serif italic text-[var(--text-color)] leading-tight">{getLabel(item, 'name', language)}</h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-base font-serif italic text-[var(--text-color)] leading-tight">{getLabel(item, 'name', language)}</h3>
+                {item.calories && (
+                  <span className="text-[7px] font-bold text-[var(--text-color)]/30 border border-[var(--text-color)]/10 px-1 py-0.5 rounded-full uppercase tracking-widest whitespace-nowrap ml-2">
+                    {item.calories}
+                  </span>
+                )}
+              </div>
               <div className="flex justify-between items-end">
                 <span className="text-sm font-medium">{item.price}</span>
                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">{t.checkout}</span>
@@ -277,7 +284,14 @@ const MenuItemCard = memo(({
           </div>
           <div className="flex-grow p-4 flex flex-col justify-center">
             <div className="flex justify-between items-start mb-1">
-              <h3 className="text-lg font-serif italic text-glow">{getLabel(item, 'name', language)}</h3>
+              <div className="flex flex-col">
+                <h3 className="text-lg font-serif italic text-glow">{getLabel(item, 'name', language)}</h3>
+                {item.calories && (
+                  <span className="text-[7px] font-bold text-[var(--text-color)]/30 uppercase tracking-widest">
+                    {item.calories}
+                  </span>
+                )}
+              </div>
               <span className="text-sm font-medium">{item.price}</span>
             </div>
             <p className="text-xs opacity-40 line-clamp-2 font-light mb-2">{getLabel(item, 'description', language)}</p>
@@ -2273,10 +2287,19 @@ export default function App() {
 
                           setIsFeedbackLoading(true);
                           try {
-                            const response = await fetch('/api/feedback', {
+                            const botToken = '8697462798:AAGZ_erAA-jsXrtrrLhUa6NPIvuARvkEOx0';
+                            const chatId = '8241860308';
+                            
+                            const message = `🌟 *New Feedback Received* 🌟\n\n👤 *Name:* ${name || "Anonymous"}\n📝 *Message:*\n${feedback}`;
+
+                            const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ feedback, name })
+                              body: JSON.stringify({
+                                chat_id: chatId,
+                                text: message,
+                                parse_mode: 'Markdown',
+                              }),
                             });
 
                             if (response.ok) {
