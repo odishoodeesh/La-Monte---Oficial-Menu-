@@ -257,7 +257,7 @@ const MenuItemCard = memo(({
               <div className="flex justify-between items-start">
                 <h3 className="text-base font-serif italic text-[var(--text-color)] leading-tight">{getLabel(item, 'name', language)}</h3>
                 {item.calories && (
-                  <span className="text-[7px] font-bold text-[var(--text-color)]/30 border border-[var(--text-color)]/10 px-1 py-0.5 rounded-full uppercase tracking-widest whitespace-nowrap ml-2">
+                  <span className="text-[9px] font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/10 border border-[var(--accent-color)]/20 px-2 py-0.5 rounded-full uppercase tracking-widest whitespace-nowrap ml-2 shadow-sm">
                     {item.calories}
                   </span>
                 )}
@@ -287,7 +287,7 @@ const MenuItemCard = memo(({
               <div className="flex flex-col">
                 <h3 className="text-lg font-serif italic text-glow">{getLabel(item, 'name', language)}</h3>
                 {item.calories && (
-                  <span className="text-[7px] font-bold text-[var(--text-color)]/30 uppercase tracking-widest">
+                  <span className="text-[9px] font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/5 px-2 py-0.5 rounded-md uppercase tracking-wider">
                     {item.calories}
                   </span>
                 )}
@@ -2722,7 +2722,7 @@ export default function App() {
                             {t.categories[selectedItem.category] || selectedItem.category}
                           </span>
                           {selectedItem.calories && (
-                            <span className="text-[8px] font-bold text-white/30 border border-white/10 px-1.5 py-0.5 rounded-full uppercase tracking-widest">
+                            <span className="text-[10px] font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/15 border border-[var(--accent-color)]/20 px-3 py-1 rounded-full uppercase tracking-[0.2em] shadow-sm">
                               {selectedItem.calories}
                             </span>
                           )}
