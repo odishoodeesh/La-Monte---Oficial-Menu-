@@ -23,8 +23,8 @@ async function startServer() {
       return res.status(400).json({ error: "Feedback is required" });
     }
 
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const botToken = process.env.TELEGRAM_BOT_TOKEN || "8697462798:AAGZ_erAA-jsXrtrrLhUa6NPIvuARvkEOx0";
+    const chatId = process.env.TELEGRAM_CHAT_ID || "8241860308";
 
     if (!botToken || !chatId) {
       console.error("Missing Telegram configuration");
