@@ -10,6 +10,7 @@ export type Category =
   | 'Coffee Frappe' 
   | 'Mojito' 
   | 'Smoothies' 
+  | 'Chia Seeds' 
   | 'Milkshake' 
   | 'Red Bull' 
   | 'Refreshing Drinks' 

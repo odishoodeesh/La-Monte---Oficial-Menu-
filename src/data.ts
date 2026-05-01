@@ -242,7 +242,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/VpYfFm1W/la-monte-pistachio-coffee.png',
     thumbnail: 'https://i.ibb.co/84g1ycCD/la-monte-pistachio-coffee.png',
-    description: 'Coffee with pistachio flavor.'
+    description: 'Coffee with pistachio flavor.',
+    calories: '200 kcal'
   },
   {
     id: 'h21',
@@ -252,7 +253,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/WvHF2V6c/la-monte-v60.png',
     thumbnail: 'https://i.ibb.co/60ybWXm4/la-monte-v60.png',
-    description: 'Hand-brewed filter coffee.'
+    description: 'Hand-brewed filter coffee.',
+    calories: '5 kcal'
   },
   {
     id: 'h23',
@@ -263,7 +265,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/4q9Z7fG/la-monte-espresso-affogato.png',
     thumbnail: 'https://i.ibb.co/CcN5ztZ/la-monte-espresso-affogato.png',
-    description: 'Espresso over vanilla ice cream.'
+    description: 'Espresso over vanilla ice cream.',
+    calories: '210 kcal'
   },
 
   // COLD DRINKS (Subcategory 2)
@@ -275,7 +278,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/GfKvsfGG/la-monte-iced-americano.png',
     thumbnail: 'https://i.ibb.co/KcMjNcBB/la-monte-iced-americano.png',
-    description: 'Iced black coffee.'
+    description: 'Iced black coffee.',
+    calories: '15 kcal'
   },
   {
     id: 'c2',
@@ -285,7 +289,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/nNs9Sns0/la-monte-cookies-iced-latte.png',
     thumbnail: 'https://i.ibb.co/5gWmVnW9/la-monte-cookies-iced-latte.png',
-    description: 'Iced latte with cookie flavor.'
+    description: 'Iced latte with cookie flavor.',
+    calories: '340 kcal'
   },
   {
     id: 'c3',
@@ -295,7 +300,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/CrL94YD/la-monte-rosa-iced-latte.png',
     thumbnail: 'https://i.ibb.co/79hpBZL/la-monte-rosa-iced-latte.png',
-    description: 'Signature rosa iced latte.'
+    description: 'Signature rosa iced latte.',
+    calories: '320 kcal'
   },
   {
     id: 'c4',
@@ -305,7 +311,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Tqppc4tg/la-monte-irish-cramel-iced.png',
     thumbnail: 'https://i.ibb.co/1JhhZrTm/la-monte-irish-cramel-iced.png',
-    description: 'Irish cream and caramel iced coffee.'
+    description: 'Irish cream and caramel iced coffee.',
+    calories: '350 kcal'
   },
   {
     id: 'c5',
@@ -315,7 +322,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/zhHWpR9R/la-monte-hazelnut-iced-coffee.png',
     thumbnail: 'https://i.ibb.co/Z61R5848/la-monte-hazelnut-iced-coffee.png',
-    description: 'Iced coffee with hazelnut flavor.'
+    description: 'Iced coffee with hazelnut flavor.',
+    calories: '280 kcal'
   },
   {
     id: 'c6',
@@ -325,7 +333,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/6JnX0pP2/la-monte-iced-latte-classic.png',
     thumbnail: 'https://i.ibb.co/5xMKhz8d/la-monte-iced-latte-classic.png',
-    description: 'Classic iced latte.'
+    description: 'Classic iced latte.',
+    calories: '150 kcal'
   },
   {
     id: 'c7',
@@ -335,7 +344,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/pB3RFpJc/la-monte-white-mocha-iced-latte.png',
     thumbnail: 'https://i.ibb.co/Xrz3RTS1/la-monte-white-mocha-iced-latte.png',
-    description: 'Iced white mocha latte.'
+    description: 'Iced white mocha latte.',
+    calories: '410 kcal'
   },
   {
     id: 'c8',
@@ -345,7 +355,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/7xXFM6z4/la-monte-iced-spansh-latte.png',
     thumbnail: 'https://i.ibb.co/fV276PSv/la-monte-iced-spansh-latte.png',
-    description: 'Iced spanish latte.'
+    description: 'Iced spanish latte.',
+    calories: '450 kcal'
   },
   {
     id: 'c9',
@@ -355,7 +366,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/7xXFM6z4/la-monte-iced-spansh-latte.png',
     thumbnail: 'https://i.ibb.co/XrgD0Xpg/la-monte-iced-latte-macron.png',
-    description: 'Macaron flavored iced latte.'
+    description: 'Macaron flavored iced latte.',
+    calories: '360 kcal'
   },
   {
     id: 'c10',
@@ -365,7 +377,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/VW91NzPG/la-monte-iced-mocha.png',
     thumbnail: 'https://i.ibb.co/LzRFPc2y/la-monte-iced-mocha.png',
-    description: 'Iced mocha latte.'
+    description: 'Iced mocha latte.',
+    calories: '390 kcal'
   },
   {
     id: 'c11',
@@ -375,7 +388,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/FbsJQrH3/la-monte-iced-cinamon-latte.png',
     thumbnail: 'https://i.ibb.co/jvVGCNJf/la-monte-iced-cinamon-latte.png',
-    description: 'Cinnamon flavored iced latte.'
+    description: 'Cinnamon flavored iced latte.',
+    calories: '310 kcal'
   },
   {
     id: 'c12',
@@ -385,7 +399,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/8g9g91Nj/la-monte-iced-vanila-latte.png',
     thumbnail: 'https://i.ibb.co/v4k4k0VJ/la-monte-iced-vanila-latte.png',
-    description: 'Vanilla flavored iced latte.'
+    description: 'Vanilla flavored iced latte.',
+    calories: '340 kcal'
   },
   {
     id: 'c13',
@@ -395,7 +410,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/NnJygSHq/la-monte-iced-coconut-latte.png',
     thumbnail: 'https://i.ibb.co/XkKCf8vP/la-monte-iced-coconut-latte.png',
-    description: 'Coconut flavored iced latte.'
+    description: 'Coconut flavored iced latte.',
+    calories: '320 kcal'
   },
   {
     id: 'c14',
@@ -405,7 +421,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/5PKKTbk/la-monte-iced-latte-strawberry-1.png',
     thumbnail: 'https://i.ibb.co/GqHH7z9/la-monte-iced-latte-strawberry-1.png',
-    description: 'Strawberry flavored iced latte.'
+    description: 'Strawberry flavored iced latte.',
+    calories: '350 kcal'
   },
   {
     id: 'c15',
@@ -415,7 +432,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/MxRM50VV/la-monte-rosa-morango-iced-latte.png',
     thumbnail: 'https://i.ibb.co/nNDz8Jcc/la-monte-rosa-morango-iced-latte.png',
-    description: 'Rosa morango iced latte.'
+    description: 'Rosa morango iced latte.',
+    calories: '380 kcal'
   },
   {
     id: 'c16',
@@ -425,7 +443,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/CpPHpkdK/la-monte-butter-popcorn-iced-latte.png',
     thumbnail: 'https://i.ibb.co/xKF7Kpvq/la-monte-butter-popcorn-iced-latte.png',
-    description: 'Butter popcorn flavored iced latte.'
+    description: 'Butter popcorn flavored iced latte.',
+    calories: '420 kcal'
   },
   {
     id: 'c17',
@@ -435,7 +454,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Z4PQtBs/la-monte-lamonte.png',
     thumbnail: 'https://i.ibb.co/QSRWzPB/la-monte-lamonte.png',
-    description: 'Signature iced latte.'
+    description: 'Signature iced latte.',
+    calories: '480 kcal'
   },
   {
     id: 'c18',
@@ -445,7 +465,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/rN7ZQXd/la-monte-iced-caramel-latte.png',
     thumbnail: 'https://i.ibb.co/1JhhZrTm/la-monte-irish-cramel-iced.png',
-    description: 'Iced caramel latte.'
+    description: 'Iced caramel latte.',
+    calories: '340 kcal'
   },
   {
     id: 'c19',
@@ -455,7 +476,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/5xKmp0Zd/la-monte-v60.png',
     thumbnail: 'https://i.ibb.co/TqW6jfyZ/la-monte-v60.png',
-    description: 'Iced hand-brewed coffee.'
+    description: 'Iced hand-brewed coffee.',
+    calories: '5 kcal'
   },
 
   // COLD BREW (Subcategory 3)
@@ -467,7 +489,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/VczB26s1/la-monte-cold-brew-1.png',
     thumbnail: 'https://i.ibb.co/sdKCvnM3/la-monte-orange-cold-brew.png',
-    description: 'Cold brew with orange.'
+    description: 'Cold brew with orange.',
+    calories: '60 kcal'
   },
   {
     id: 'cb2',
@@ -477,7 +500,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/VczB26s1/la-monte-cold-brew-1.png',
     thumbnail: 'https://i.ibb.co/rRzy49Vj/la-monte-cold-brew-1.png',
-    description: 'Classic cold brew.'
+    description: 'Classic cold brew.',
+    calories: '5 kcal'
   },
 
   // COFFEE FRAPPE (Subcategory 4)
@@ -568,7 +592,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/3y0ZHGQX/la-monte-mojito-strawberry.png',
     thumbnail: 'https://i.ibb.co/27j4BmH2/la-monte-mojito-strawberry.png',
-    description: 'Strawberry flavored mojito.'
+    description: 'Strawberry flavored mojito.',
+    calories: '210 kcal'
   },
   {
     id: 'm2',
@@ -578,7 +603,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jZDnRx6n/la-monte-classic-mojito.png',
     thumbnail: 'https://i.ibb.co/DgQ0p6V0/la-monte-classic-mojito.png',
-    description: 'Refreshing classic mojito.'
+    description: 'Refreshing classic mojito.',
+    calories: '160 kcal'
   },
   {
     id: 'm3',
@@ -588,7 +614,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jkCnfWWV/la-monte-mohito-grenadine.png',
     thumbnail: 'https://i.ibb.co/7t3sCRRg/la-monte-mohito-grenadine.png',
-    description: 'Grenadine flavored mojito.'
+    description: 'Grenadine flavored mojito.',
+    calories: '220 kcal'
   },
   {
     id: 'm4',
@@ -598,7 +625,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/9Sxg6KD/la-monte-mojito-blueberry.png',
     thumbnail: 'https://i.ibb.co/SGkybYj/la-monte-mojito-blueberry.png',
-    description: 'Blueberry flavored mojito.'
+    description: 'Blueberry flavored mojito.',
+    calories: '210 kcal'
   },
   {
     id: 'm5',
@@ -608,7 +636,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/39K3ddmF/la-monte-mojito-mongo.png',
     thumbnail: 'https://i.ibb.co/gLY299ZW/la-monte-mojito-mongo.png',
-    description: 'Mango flavored mojito.'
+    description: 'Mango flavored mojito.',
+    calories: '230 kcal'
   },
   {
     id: 'm6',
@@ -618,7 +647,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jkjPVBnK/la-monte-mojito-cherry.png',
     thumbnail: 'https://i.ibb.co/RTJkhZRn/la-monte-mojito-cherry.png',
-    description: 'Cherry flavored mojito.'
+    description: 'Cherry flavored mojito.',
+    calories: '220 kcal'
   },
   {
     id: 'm7',
@@ -628,7 +658,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/B2vHdvK4/la-monte-mojito-tangrena-cinnamon.png',
     thumbnail: 'https://i.ibb.co/PGJs3JzT/la-monte-mojito-tangrena-cinnamon.png',
-    description: 'Tangerine and cinnamon flavored mojito.'
+    description: 'Tangerine and cinnamon flavored mojito.',
+    calories: '200 kcal'
   },
   {
     id: 'm8',
@@ -638,7 +669,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/tMsnnVkP/la-monte-mojito-peach-apricot.png',
     thumbnail: 'https://i.ibb.co/pvzNNYGr/la-monte-mojito-peach-apricot.png',
-    description: 'Peach and apricot flavored mojito.'
+    description: 'Peach and apricot flavored mojito.',
+    calories: '210 kcal'
   },
   {
     id: 'm9',
@@ -648,7 +680,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/FkLRz4jK/la-monte-mojito-la-monte.png',
     thumbnail: 'https://i.ibb.co/nqNxjM5b/la-monte-mojito-la-monte.png',
-    description: 'Signature mojito.'
+    description: 'Signature mojito.',
+    calories: '240 kcal'
   },
 
   // SMOTHIES (Subcategory 6)
@@ -861,7 +894,8 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Red Bull',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jZf24P8v/la-monte-frappe-mocha-dark.png', // Placeholder link based on similar drinks if not provided
-    description: 'Red bull with peach and curacao.'
+    description: 'Red bull with peach and curacao.',
+    calories: '180 kcal'
   },
   {
     id: 'rb2',
@@ -871,7 +905,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/jqNdvnh/la-monte-red-bull-strawberry.png',
     thumbnail: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
-    description: 'Red bull with strawberry.'
+    description: 'Red bull with strawberry.',
+    calories: '200 kcal'
   },
   {
     id: 'rb3',
@@ -881,7 +916,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/hJQSX7np/la-monte-red-bull-la-monte.png',
     thumbnail: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
-    description: 'Signature Red bull drink.'
+    description: 'Signature Red bull drink.',
+    calories: '220 kcal'
   },
   {
     id: 'rb4',
@@ -891,7 +927,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/sJp223JX/la-monte-red-bull-blueberry.png',
     thumbnail: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
-    description: 'Red bull with blueberry.'
+    description: 'Red bull with blueberry.',
+    calories: '210 kcal'
   },
   {
     id: 'rb5',
@@ -901,7 +938,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/7t66FFF7/la-monte-classic-redbull.png',
     thumbnail: 'https://i.ibb.co/Mk33LLLq/la-monte-classic-redbull.png',
-    description: 'Classic red bull.'
+    description: 'Classic red bull.',
+    calories: '110 kcal'
   },
 
   // REFRESHING DRINKS (Subcategory 9)
@@ -913,7 +951,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/MxFF1TKK/la-monte-pesca-fragola.png',
     thumbnail: 'https://i.ibb.co/Hf55PvRR/la-monte-pesca-fragola.png',
-    description: 'Peach and strawberry refreshing drink.'
+    description: 'Peach and strawberry refreshing drink.',
+    calories: '150 kcal'
   },
   {
     id: 'rd2',
@@ -923,7 +962,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/1GpMx473/la-monte-verde-frizzante-matcha.png',
     thumbnail: 'https://i.ibb.co/0yWK3zmk/la-monte-verde-frizzante-matcha.png',
-    description: 'Matcha refreshing drink.'
+    description: 'Matcha refreshing drink.',
+    calories: '180 kcal'
   },
   {
     id: 'rd3',
@@ -933,7 +973,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/rRTn46tB/la-monte-margeta-laranga.png',
     thumbnail: 'https://i.ibb.co/wF3DMWLn/la-monte-margeta-laranga.png',
-    description: 'Signature refreshing drink.'
+    description: 'Signature refreshing drink.',
+    calories: '160 kcal'
   },
   {
     id: 'rd4',
@@ -943,7 +984,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/wFRspgxD/la-monte-ruber-aestivus.png',
     thumbnail: 'https://i.ibb.co/HfVdG4km/la-monte-ruber-aestivus.png',
-    description: 'Summer red refreshing drink.'
+    description: 'Summer red refreshing drink.',
+    calories: '170 kcal'
   },
   {
     id: 'rd5',
@@ -953,7 +995,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/wZWStNdw/la-monte-tropsik.png',
     thumbnail: 'https://i.ibb.co/hxWB0RgZ/la-monte-tropsik.png',
-    description: 'Tropical refreshing drink.'
+    description: 'Tropical refreshing drink.',
+    calories: '190 kcal'
   },
   {
     id: 'rd6',
@@ -963,7 +1006,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/hxB89mk4/la-monte-watermelon-strawberry-lemonada.png',
     thumbnail: 'https://i.ibb.co/Ng9YCyXJ/la-monte-watermelon-strawberry-lemonada.png',
-    description: 'Watermelon strawberry lemonade.'
+    description: 'Watermelon strawberry lemonade.',
+    calories: '160 kcal'
   },
   {
     id: 'rd7',
@@ -973,7 +1017,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Hf6WcZyT/la-monte-mabella.png',
     thumbnail: 'https://i.ibb.co/VcR7F6GY/la-monte-mabella.png',
-    description: 'Signature mabella drink.'
+    description: 'Signature mabella drink.',
+    calories: '180 kcal'
   },
 
   // FRESH JUICE (Subcategory 10)
@@ -985,7 +1030,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/VYN9FXSg/la-monte-lemon-mint.png',
     thumbnail: 'https://i.ibb.co/4RftbBT8/la-monte-lemon-mint.png',
-    description: 'Fresh lemon and mint juice.'
+    description: 'Fresh lemon and mint juice.',
+    calories: '120 kcal'
   },
   {
     id: 'fj2',
@@ -995,7 +1041,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/s9DxhGTw/la-monte-orange-and-mango.png',
     thumbnail: 'https://i.ibb.co/pv8yskgD/la-monte-orange.png',
-    description: 'Fresh orange juice.'
+    description: 'Fresh orange juice.',
+    calories: '140 kcal'
   },
   {
     id: 'fj3',
@@ -1005,7 +1052,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/s9DxhGTw/la-monte-orange-and-mango.png',
     thumbnail: 'https://i.ibb.co/b5ywxZ4B/la-monte-orange-and-mango.png',
-    description: 'Fresh orange and mango juice.'
+    description: 'Fresh orange and mango juice.',
+    calories: '180 kcal'
   },
   {
     id: 'fj4',
@@ -1015,7 +1063,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/FLVw68x2/la-monte-avocado-juice.png',
     thumbnail: 'https://i.ibb.co/Kpwq6V0d/la-monte-avocado-juice.png',
-    description: 'Fresh avocado juice.'
+    description: 'Fresh avocado juice.',
+    calories: '320 kcal'
   },
   {
     id: 'fj5',
@@ -1025,7 +1074,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/PsX5T7Gc/la-monte-coctail.png',
     thumbnail: 'https://i.ibb.co/6c94v30H/la-monte-coctail.png',
-    description: 'Fresh fruit cocktail.'
+    description: 'Fresh fruit cocktail.',
+    calories: '250 kcal'
   },
 
   // DETOX (Subcategory 11)
@@ -1037,7 +1087,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/prRb6yG4/la-monte-clear-skin-detox.png',
     thumbnail: 'https://i.ibb.co/Pz9FsQ31/la-monte-clear-skin-detox.png',
-    description: 'Clear skin detox juice.'
+    description: 'Clear skin detox juice.',
+    calories: '90 kcal'
   },
   {
     id: 'dx2',
@@ -1047,7 +1098,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/FbX0GhrC/la-monte-blood-flow-detox.png',
     thumbnail: 'https://i.ibb.co/tMzxyHGF/la-monte-blood-flow-detox.png',
-    description: 'Blood flow detox juice.'
+    description: 'Blood flow detox juice.',
+    calories: '110 kcal'
   },
   {
     id: 'dx3',
@@ -1057,7 +1109,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/wh2Ctq9R/la-monte-bloom-cleanse.png',
     thumbnail: 'https://i.ibb.co/RTJP8Kx9/la-monte-bloom-cleanse.png',
-    description: 'Bloom cleanse detox juice.'
+    description: 'Bloom cleanse detox juice.',
+    calories: '100 kcal'
   },
 
   // ICED TEA (Subcategory 12)
@@ -1069,7 +1122,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/GvQkGqht/la-monte-rouge-iced-tea.png',
     thumbnail: 'https://i.ibb.co/JRj289hy/la-monte-rouge-iced-tea.png',
-    description: 'Rouge iced tea.'
+    description: 'Rouge iced tea.',
+    calories: '120 kcal'
   },
   {
     id: 'it2',
@@ -1079,7 +1133,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/dw1Md3rp/la-monte-raspberry-iced-tea.png',
     thumbnail: 'https://i.ibb.co/ycGPwMXk/la-monte-raspberry-iced-tea.png',
-    description: 'Raspberry iced tea.'
+    description: 'Raspberry iced tea.',
+    calories: '140 kcal'
   },
   {
     id: 'it3',
@@ -1089,7 +1144,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/3yMGnM13/la-monte-peach-iced-tea.png',
     thumbnail: 'https://i.ibb.co/5WntPnT0/la-monte-peach-iced-tea.png',
-    description: 'Peach iced tea.'
+    description: 'Peach iced tea.',
+    calories: '130 kcal'
   },
 
   // TEA (Subcategory 13)
@@ -1101,7 +1157,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/PGNyQdBS/la-monte-tea-single.png',
     thumbnail: 'https://i.ibb.co/VYtGmsXK/la-monte-tea-single.png',
-    description: 'Single cup of tea.'
+    description: 'Single cup of tea.',
+    calories: '2 kcal'
   },
   {
     id: 't2',
@@ -1111,7 +1168,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/sJs5gXzy/la-monte-tea.png',
     thumbnail: 'https://i.ibb.co/k6q3GPvQ/la-monte-tea.png',
-    description: 'Freshly brewed tea.'
+    description: 'Freshly brewed tea.',
+    calories: '2 kcal'
   },
   {
     id: 't3',
@@ -1121,7 +1179,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/hx0dhmcS/la-monte-hibiscus-tea.png',
     thumbnail: 'https://i.ibb.co/GfmMB59q/la-monte-hibiscus-tea.png',
-    description: 'Hibiscus herbal tea.'
+    description: 'Hibiscus herbal tea.',
+    calories: '5 kcal'
   },
   {
     id: 't4',
@@ -1131,7 +1190,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/35tQ9krd/la-monte-herbs-tea.png',
     thumbnail: 'https://i.ibb.co/SDqG4Jsy/la-monte-herbs-tea.png',
-    description: 'Mixed herbal tea.'
+    description: 'Mixed herbal tea.',
+    calories: '5 kcal'
   },
 
   // MILK (Subcategory 14)
@@ -1143,7 +1203,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Nds04xBn/la-monte-milk.png',
     thumbnail: 'https://i.ibb.co/8DqSrpwL/la-monte-milk-Copy-2.png',
-    description: 'Fresh milk.'
+    description: 'Fresh milk.',
+    calories: '150 kcal'
   },
   {
     id: 'mk2',
@@ -1153,7 +1214,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/s9VbddHC/la-monte-caramel.png',
     thumbnail: 'https://i.ibb.co/DfRzHHpY/la-monte-caramel.png',
-    description: 'Caramel flavored milk.'
+    description: 'Caramel flavored milk.',
+    calories: '260 kcal'
   },
   {
     id: 'mk3',
@@ -1163,7 +1225,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/fzxxTGPn/la-monte-vanilla.png',
     thumbnail: 'https://i.ibb.co/JwssSFMy/la-monte-vanilla.png',
-    description: 'Vanilla flavored milk.'
+    description: 'Vanilla flavored milk.',
+    calories: '250 kcal'
   },
   {
     id: 'mk4',
@@ -1173,7 +1236,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/9H2hx0dX/la-monte-honey-1.png',
     thumbnail: 'https://i.ibb.co/b5LF4VGh/la-monte-honey-1.png',
-    description: 'Honey flavored milk.'
+    description: 'Honey flavored milk.',
+    calories: '240 kcal'
   },
 
   // HOT CHOCOLATE (Subcategory 15)
@@ -1184,7 +1248,8 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Chocolate',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Zp0N1N4c/la-monte-hot-chocolate.png',
-    description: 'Classic hot chocolate.'
+    description: 'Classic hot chocolate.',
+    calories: '350 kcal'
   },
   {
     id: 'hc2',
@@ -1193,7 +1258,8 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Chocolate',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Zp0N1N4c/la-monte-hot-chocolate.png',
-    description: 'Cookies flavored hot chocolate.'
+    description: 'Cookies flavored hot chocolate.',
+    calories: '420 kcal'
   },
   {
     id: 'hc3',
@@ -1202,7 +1268,8 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Chocolate',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Zp0N1N4c/la-monte-hot-chocolate.png',
-    description: 'Toffee flavored hot chocolate.'
+    description: 'Toffee flavored hot chocolate.',
+    calories: '410 kcal'
   },
   {
     id: 'hc4',
@@ -1211,7 +1278,8 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Hot Chocolate',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Zp0N1N4c/la-monte-hot-chocolate.png',
-    description: 'Lavender flavored hot chocolate.'
+    description: 'Lavender flavored hot chocolate.',
+    calories: '380 kcal'
   },
 
   // WATER (Subcategory 16)
@@ -1223,7 +1291,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/MQVQv7Q/la-monte-water.png',
     thumbnail: 'https://i.ibb.co/ghTh2Jh/la-monte-water.png',
-    description: 'Bottled water.'
+    description: 'Bottled water.',
+    calories: '0 kcal'
   },
   {
     id: 'w2',
@@ -1233,7 +1302,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/5gPWT5X3/la-monte-tonic.png',
     thumbnail: 'https://i.ibb.co/fzsYMCVW/la-monte-tonic.png',
-    description: 'Tonic water.'
+    description: 'Tonic water.',
+    calories: '70 kcal'
   },
 
   // MATCHA (Subcategory 17)
@@ -1245,7 +1315,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/67X8S2d1/la-monte-matcha.png',
     thumbnail: 'https://i.ibb.co/yc4pCD3Y/la-monte-matcha.png',
-    description: 'Hot matcha latte.'
+    description: 'Hot matcha latte.',
+    calories: '180 kcal'
   },
   {
     id: 'mt2',
@@ -1255,7 +1326,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/RGRdC867/la-monte-iced-matcha.png',
     thumbnail: 'https://i.ibb.co/20GHjJM5/la-monte-iced-matcha.png',
-    description: 'Iced matcha latte.'
+    description: 'Iced matcha latte.',
+    calories: '210 kcal'
   },
   {
     id: 'mt3',
@@ -1265,7 +1337,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/kVwxw1n1/la-monte-hot-vanilla-matcha.png',
     thumbnail: 'https://i.ibb.co/1YPLP6V6/la-monte-hot-vanilla-matcha.png',
-    description: 'Hot vanilla matcha latte.'
+    description: 'Hot vanilla matcha latte.',
+    calories: '260 kcal'
   },
   {
     id: 'mt4',
@@ -1275,7 +1348,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Q7bZZ2wg/la-monte-iced-vanilla-matcha.png',
     thumbnail: 'https://i.ibb.co/qLyzztQS/la-monte-iced-vanilla-matcha.png',
-    description: 'Iced vanilla matcha latte.'
+    description: 'Iced vanilla matcha latte.',
+    calories: '290 kcal'
   },
   {
     id: 'mt5',
@@ -1285,7 +1359,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Qj7qkmMQ/la-monte-iced-matcha-strawberry.png',
     thumbnail: 'https://i.ibb.co/NngkrYKC/la-monte-iced-matcha-strawberry.png',
-    description: 'Iced strawberry matcha latte.'
+    description: 'Iced strawberry matcha latte.',
+    calories: '320 kcal'
   },
   {
     id: 'mt6',
@@ -1295,7 +1370,49 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/pvfpZ3fJ/la-monte-iced-coconut-matcha-1.png',
     thumbnail: 'https://i.ibb.co/svKrQFKy/la-monte-iced-coconut-matcha-1.png',
-    description: 'Iced coconut matcha latte.'
+    description: 'Iced coconut matcha latte.',
+    calories: '300 kcal'
+  },
+
+  // CHIA SEEDS (Subcategory 18)
+  {
+    id: 'cs1',
+    name: 'Strawberry Chia Seeds',
+    nameAr: 'بذور شيا بالفراولة',
+    nameKu: 'چیا سیدس ب فرەولە',
+    price: '6,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/gZJ9XLTV/la-monte-strawberry-chia-seeds.png',
+    thumbnail: 'https://i.ibb.co/YBhQKFkZ/la-monte-strawberry-chia-seeds.png',
+    description: 'Strawberry flavored chia seeds drink.',
+    calories: '280 kcal'
+  },
+  {
+    id: 'cs2',
+    name: 'Avocado & Banana Chia Seeds',
+    nameAr: 'بذور شيا بالأفوكادو والموز',
+    nameKu: 'چیا سیدس ب ئەڤۆکادۆ و مۆز',
+    price: '6,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/ZsZGnrt/la-monte-avocado-banana-chia-seeds-1.png',
+    thumbnail: 'https://i.ibb.co/DXqzxFs/la-monte-avocado-banana-chia-seeds-1.png',
+    description: 'Avocado and banana flavored chia seeds drink.',
+    calories: '350 kcal'
+  },
+  {
+    id: 'cs3',
+    name: 'Mango Chia Seeds',
+    nameAr: 'بذور شيا بالمانجو',
+    nameKu: 'چیا سیدس ب مانگۆ',
+    price: '6,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/kVwb3Gyd/la-monte-mango-chia-seeds.png',
+    thumbnail: 'https://i.ibb.co/mr2ZvRBx/la-monte-mango-chia-seeds.png',
+    description: 'Mango flavored chia seeds drink.',
+    calories: '320 kcal'
   },
 
   // SHISHA
@@ -1420,7 +1537,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/ZR9pCX5J/la-monte-toast-cheese.png',
     thumbnail: 'https://i.ibb.co/WNC415Z3/la-monte-toast-cheese.png',
-    description: 'Toasted bread with cheese.'
+    description: 'Toasted bread with cheese.',
+    calories: '450 kcal'
   },
   {
     id: 'tst2',
@@ -1430,7 +1548,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/6d0049r/la-monte-avocado-toast.png',
     thumbnail: 'https://i.ibb.co/79ttGMj/la-monte-avocado-toast.png',
-    description: 'Toasted bread with avocado.'
+    description: 'Toasted bread with avocado.',
+    calories: '380 kcal'
   },
   {
     id: 'tst3',
@@ -1440,7 +1559,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/MkbXjsr0/la-monte-tuna-toast.png',
     thumbnail: 'https://i.ibb.co/chPmp10n/la-monte-tuna-toast.png',
-    description: 'Toasted bread with tuna.'
+    description: 'Toasted bread with tuna.',
+    calories: '420 kcal'
   },
   {
     id: 'tst4',
@@ -1450,7 +1570,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/pBSMWtJX/la-monte-smoked-turkey.png',
     thumbnail: 'https://i.ibb.co/KpJfNMFy/la-monte-smoked-turkey.png',
-    description: 'Smoked turkey sandwich.'
+    description: 'Smoked turkey sandwich.',
+    calories: '480 kcal'
   },
 
   // COOKIES
@@ -1462,7 +1583,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/xK88Pvjh/la-monte-double-chocolate-chip-american-cookie-1.png',
     thumbnail: 'https://i.ibb.co/rKffTP6k/la-monte-double-chocolate-chip-american-cookie-1.png',
-    description: 'Rich American cookie with double chocolate chips.'
+    description: 'Rich American cookie with double chocolate chips.',
+    calories: '320 kcal'
   },
   {
     id: 'cook2',
@@ -1472,7 +1594,8 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/jP6C0Ghp/la-monte-white-chocolate-chip-american-cookie-with-cranberries-1.png',
     thumbnail: 'https://i.ibb.co/mVDnZtJx/la-monte-white-chocolate-chip-american-cookie-with-cranberries-1.png',
-    description: 'American cookie with white chocolate chips and tangy cranberries.'
+    description: 'American cookie with white chocolate chips and tangy cranberries.',
+    calories: '310 kcal'
   },
   {
     id: 'cook3',
@@ -1482,6 +1605,7 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Food',
     image: 'https://i.ibb.co/8nWSGjYv/la-monte-chocolate-chip-american-cookie.png',
     thumbnail: 'https://i.ibb.co/Q721h6DS/la-monte-chocolate-chip-american-cookie.png',
-    description: 'Classic American cookie with chocolate chips.'
+    description: 'Classic American cookie with chocolate chips.',
+    calories: '290 kcal'
   }
 ];

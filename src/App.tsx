@@ -477,7 +477,7 @@ const MagicWorld = ({
       if (t === 'Warm') {
         filtered = filtered.filter(item => item.category === 'Hot Drinks');
       } else {
-        filtered = filtered.filter(item => item.category === 'Cold Drinks' || item.category === 'Coffee Frappe' || item.category === 'Cold Brew');
+        filtered = filtered.filter(item => item.category === 'Cold Drinks' || item.category === 'Coffee Frappe' || item.category === 'Cold Brew' || item.category === 'Chia Seeds');
       }
     }
 
@@ -1253,6 +1253,7 @@ export default function App() {
         'Coffee Frappe': 'Coffee Frappe',
         'Mojito': 'Mojito',
         'Smoothies': 'Smoothies',
+        'Chia Seeds': 'Chia Seeds',
         'Milkshake': 'Milkshake',
         'Red Bull': 'Red Bull',
         'Refreshing Drinks': 'Refreshing Drinks',
@@ -1375,6 +1376,7 @@ export default function App() {
         'Coffee Frappe': 'کۆفی فراپێ',
         'Mojito': 'مۆهیتۆ',
         'Smoothies': 'سمووزی',
+        'Chia Seeds': 'چیا سیدس',
         'Milkshake': 'میلک شیک',
         'Red Bull': 'ریدبوڵ',
         'Refreshing Drinks': 'خواردنەوە تازەگەرییەکان',
@@ -1497,6 +1499,7 @@ export default function App() {
         'Coffee Frappe': 'کوفي فرابية',
         'Mojito': 'موهيتو',
         'Smoothies': 'سموذي',
+        'Chia Seeds': 'بذور الشيا',
         'Milkshake': 'ميلك شيك',
         'Red Bull': 'ريد بول',
         'Refreshing Drinks': 'مشروبات منعشة',
@@ -1951,6 +1954,7 @@ export default function App() {
     { name: 'Coffee Frappe', icon: Coffee, main: 'Drinks' },
     { name: 'Mojito', icon: Wind, main: 'Drinks' },
     { name: 'Smoothies', icon: Wind, main: 'Drinks' },
+    { name: 'Chia Seeds', icon: Leaf, main: 'Drinks' },
     { name: 'Milkshake', icon: IceCream, main: 'Drinks' },
     { name: 'Red Bull', icon: Zap, main: 'Drinks' },
     { name: 'Refreshing Drinks', icon: Wind, main: 'Drinks' },
