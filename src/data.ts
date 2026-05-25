@@ -893,7 +893,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '6,000 IQD',
     category: 'Red Bull',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/jZf24P8v/la-monte-frappe-mocha-dark.png', // Placeholder link based on similar drinks if not provided
+    image: 'https://i.ibb.co/5XbJ7wNV/la-monte-redbull-peach-curacao.png',
+    thumbnail: 'https://i.ibb.co/0pHzwvg3/la-monte-redbull-peach-curacao.png',
     description: 'Red bull with peach and curacao.',
     calories: '180 kcal'
   },
@@ -914,8 +915,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '6,000 IQD',
     category: 'Red Bull',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/hJQSX7np/la-monte-red-bull-la-monte.png',
-    thumbnail: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
+    image: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
+    thumbnail: 'https://i.ibb.co/RkrqhvML/la-monte-red-bull-la-monte.png',
     description: 'Signature Red bull drink.',
     calories: '220 kcal'
   },
@@ -926,7 +927,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'Red Bull',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/sJp223JX/la-monte-red-bull-blueberry.png',
-    thumbnail: 'https://i.ibb.co/DmJND04/la-monte-red-bull-strawberry.png',
+    thumbnail: 'https://i.ibb.co/HpLVVgp9/la-monte-red-bull-blueberry.png',
     description: 'Red bull with blueberry.',
     calories: '210 kcal'
   },
