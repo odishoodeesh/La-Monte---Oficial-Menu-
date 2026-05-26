@@ -996,51 +996,83 @@ export default function App() {
   const [profileTab, setProfileTab] = useState<'favorites' | 'history'>('history');
   const [showIntro, setShowIntro] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  const [isSpotifyOpen, setIsSpotifyOpen] = useState(false);
+  const [isSpotifyActive, setIsSpotifyActive] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
-  // Background Music
+  // Intro Screen Auto Dismiss
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntro(false);
+    }, 3200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Background Music Initialization (Once on Mount)
   useEffect(() => {
     const audio = new Audio('https://image2url.com/r2/default/audio/1774682334207-b2eb5d34-3c4d-480d-9649-4cb13e213b74.mp3');
     audio.loop = true;
     audio.volume = 0.5;
     audioRef.current = audio;
 
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  // Background Music Control Effect (Mute, Spotify, and Entering App Events)
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     const playAudio = () => {
-      if (!isMuted && audio.paused) {
+      if (!isMuted && !isSpotifyActive && audio.paused) {
         audio.play().catch(err => {
           console.log('Autoplay blocked, waiting for user interaction', err);
         });
       }
     };
 
-    playAudio();
+    const pauseAudio = () => {
+      if (!audio.paused) {
+        audio.pause();
+      }
+    };
+
+    if (!isMuted && !isSpotifyActive) {
+      playAudio();
+    } else {
+      pauseAudio();
+    }
 
     const handleInteraction = () => {
-      playAudio();
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
+      if (!isMuted && !isSpotifyActive) {
+        playAudio();
+      }
+      window.removeEventListener('click', handleInteraction, { capture: true });
+      window.removeEventListener('touchstart', handleInteraction, { capture: true });
+      window.removeEventListener('keydown', handleInteraction, { capture: true });
+      window.removeEventListener('mousedown', handleInteraction, { capture: true });
     };
 
-    window.addEventListener('click', handleInteraction);
-    window.addEventListener('touchstart', handleInteraction);
+    window.addEventListener('click', handleInteraction, { capture: true });
+    window.addEventListener('touchstart', handleInteraction, { capture: true });
+    window.addEventListener('keydown', handleInteraction, { capture: true });
+    window.addEventListener('mousedown', handleInteraction, { capture: true });
 
     return () => {
-      audio.pause();
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('click', handleInteraction, { capture: true });
+      window.removeEventListener('touchstart', handleInteraction, { capture: true });
+      window.removeEventListener('keydown', handleInteraction, { capture: true });
+      window.removeEventListener('mousedown', handleInteraction, { capture: true });
     };
-  }, [isMuted]);
+  }, [isMuted, isSpotifyActive, showIntro]);
 
   const toggleMute = useCallback(() => {
-    if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
-      setIsMuted(!isMuted);
-    }
-  }, [isMuted]);
+    setIsMuted(prev => !prev);
+  }, []);
   
   // State for Cart, Favorites, and History
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -1607,8 +1639,6 @@ export default function App() {
 
   // Load data from localStorage
   useEffect(() => {
-    const timer = setTimeout(() => setShowIntro(false), 3500);
-    
     const savedCart = localStorage.getItem('cafe_cart');
     const savedFavs = localStorage.getItem('cafe_favorites');
     const savedHistory = localStorage.getItem('cafe_history');
@@ -1620,8 +1650,6 @@ export default function App() {
     if (savedHistory) setOrderHistory(JSON.parse(savedHistory));
     if (savedTheme) setTheme(savedTheme as any);
     if (savedViewMode) setViewMode(savedViewMode as any);
-
-    return () => clearTimeout(timer);
   }, []);
 
   // Weather and Recommendation Logic
@@ -1985,7 +2013,15 @@ export default function App() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: 'blur(20px)' }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#F9F8F6] overflow-hidden"
+            onClick={() => {
+              setShowIntro(false);
+              if (audioRef.current && !isMuted && !isSpotifyActive) {
+                audioRef.current.play().catch(err => {
+                  console.log('Autoplay play failed', err);
+                });
+              }
+            }}
+            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#F9F8F6] overflow-hidden cursor-pointer"
           >
             {/* Atmospheric Background for Intro */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -2022,6 +2058,8 @@ export default function App() {
                 <div className="h-px w-24 bg-gradient-to-r from-transparent via-[var(--text-color)]/40 to-transparent mb-4" />
                 <p className="text-[10px] uppercase tracking-[0.8em] text-[var(--text-color)]/40 font-bold">Experience the Dawn</p>
               </motion.div>
+
+
             </div>
 
             {/* Cinematic Scanline */}
@@ -2150,7 +2188,17 @@ export default function App() {
                   {viewMode === 'magazine' && <Sparkles size={20} className="group-hover:scale-110 transition-transform" />}
                 </motion.button>
 
-
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => { setIsSpotifyOpen(true); setIsSpotifyActive(true); }}
+                  className="hidden md:flex p-2.5 hover:bg-[var(--text-color)]/5 border border-[var(--text-color)]/10 rounded-2xl transition-all text-[var(--text-color)]/70 hover:text-[var(--text-color)] relative group"
+                  title="Spotify Playlist"
+                >
+                  <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor" className="group-hover:scale-110 transition-transform">
+                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.845 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.784-.97-.333.075-.664-.136-.74-.47-.075-.333.136-.662.47-.738 3.812-.87 7.085-.5 9.704 1.104.294.18.388.563.207.857zm1.225-2.72c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.97-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.636-1.103 8.146-.566 11.236 1.332.367.226.487.707.26 1.07zm.106-2.833C14.385 8.614 8.54 8.42 5.148 9.45c-.52.158-1.07-.143-1.227-.662-.158-.52.143-1.07.662-1.228 3.903-1.185 10.364-.962 14.444 1.46.47.28.62.89.34 1.36-.28.47-.89.62-1.36.34z"/>
+                  </svg>
+                </motion.button>
 
                 <motion.button 
                   whileHover={{ scale: 1.1 }}
@@ -3472,6 +3520,144 @@ export default function App() {
               )}
             </AnimatePresence>
 
+            {/* Spotify Sidebar Backdrop */}
+            <AnimatePresence>
+              {isSpotifyOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsSpotifyOpen(false)}
+                  className="fixed inset-0 bg-[var(--bg-color)]/60 backdrop-blur-xl z-[145]"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Spotify Sidebar Container */}
+            {isSpotifyActive && (
+              <motion.div
+                initial={{ x: '-105%' }}
+                animate={{ x: isSpotifyOpen ? 0 : '-105%' }}
+                transition={{ type: "spring", damping: 25, stiffness: 180 }}
+                style={{ pointerEvents: isSpotifyOpen ? 'auto' : 'none' }}
+                className="fixed left-0 top-0 bottom-0 w-80 md:w-96 h-full glass-dark border-r border-[var(--text-color)]/10 p-6 flex flex-col gap-4 shadow-2xl z-[150] overflow-y-auto no-scrollbar"
+              >
+                <div className="flex justify-between items-center mb-2 px-2 pt-2">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[var(--text-color)]/5 border border-[var(--text-color)]/10 rounded-xl flex items-center justify-center text-[var(--text-color)]/70 hover:scale-110 transition-transform">
+                      <svg viewBox="0 0 24 24" width={22} height={22} fill="currentColor">
+                        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.845 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.784-.97-.333.075-.664-.136-.74-.47-.075-.333.136-.662.47-.738 3.812-.87 7.085-.5 9.704 1.104.294.18.388.563.207.857zm1.225-2.72c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.97-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.636-1.103 8.146-.566 11.236 1.332.367.226.487.707.26 1.07zm.106-2.833C14.385 8.614 8.54 8.42 5.148 9.45c-.52.158-1.07-.143-1.227-.662-.158-.52.143-1.07.662-1.228 3.903-1.185 10.364-.962 14.444 1.46.47.28.62.89.34 1.36-.28.47-.89.62-1.36.34z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="text-sm font-bold uppercase tracking-widest text-[var(--text-color)]">Spotify Player</span>
+                      <p className="text-[9px] opacity-40 uppercase tracking-widest font-bold font-mono">La Monte Selection</p>
+                    </div>
+                  </div>
+                  <motion.button 
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setIsSpotifyOpen(false)}
+                    className="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                  >
+                    <X size={18} />
+                  </motion.button>
+                </div>
+
+                <div className="flex flex-col gap-5 mt-2">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-color)]/70 px-1">La Monte Cozy Mix</span>
+                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-black/40 p-1">
+                      <iframe 
+                        data-testid="embed-iframe" 
+                        style={{ borderRadius: '12px' }} 
+                        src="https://open.spotify.com/embed/playlist/0BS0s5p1e40lTuhcE0mVN1?utm_source=generator" 
+                        width="100%" 
+                        height="152" 
+                        frameBorder="0" 
+                        allowFullScreen={true}
+                        allow="autoplay; clipboard-write; encrypted-media; clipboard-read; fullscreen; picture-in-picture" 
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-color)]/70 px-1">Chilled & Jazz Selection</span>
+                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-black/40 p-1">
+                      <iframe 
+                        data-testid="embed-iframe" 
+                        style={{ borderRadius: '12px' }} 
+                        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXd9rSDyQguIk?utm_source=generator" 
+                        width="100%" 
+                        height="352" 
+                        frameBorder="0" 
+                        allowFullScreen={true}
+                        allow="autoplay; clipboard-write; encrypted-media; clipboard-read; fullscreen; picture-in-picture" 
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-color)]/70 px-1">Lofi Lounge Selection</span>
+                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-black/40 p-1">
+                      <iframe 
+                        data-testid="embed-iframe" 
+                        style={{ borderRadius: '12px' }} 
+                        src="https://open.spotify.com/embed/playlist/4iUHYUCJ8IUEN6pIdZdjnQ?utm_source=generator" 
+                        width="100%" 
+                        height="352" 
+                        frameBorder="0" 
+                        allowFullScreen={true}
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-2">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-color)]/60">Now Playing Ambient</span>
+                    <p className="text-xs opacity-50 leading-relaxed">
+                      Immerse yourself in our hand-curated cafe melody selections. Choose any playlist to enjoy while exploring our premium menu.
+                    </p>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setIsSpotifyActive(false);
+                      setIsSpotifyOpen(false);
+                    }}
+                    className="w-full py-3 px-4 mt-2 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold text-xs uppercase tracking-wider border border-red-500/20 flex items-center justify-center gap-2 transition-all mt-auto"
+                  >
+                    <Volume2 size={14} />
+                    <span>Stop Spotify & Resume Ambient</span>
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Spotify Floating Toggle Button (Left Side) */}
+            {!showIntro && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { setIsSpotifyOpen(true); setIsSpotifyActive(true); }}
+                className="fixed left-6 bottom-10 md:bottom-auto md:top-[85%] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] cursor-pointer transition-all duration-300"
+                aria-label="Open Spotify Playlist"
+              >
+                {isSpotifyActive && !isSpotifyOpen && (
+                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[var(--text-color)] border border-[var(--bg-color)] rounded-full z-20" />
+                )}
+                <svg viewBox="0 0 24 24" width={22} height={22} fill="currentColor" className="relative z-10">
+                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.845 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.784-.97-.333.075-.664-.136-.74-.47-.075-.333.136-.662.47-.738 3.812-.87 7.085-.5 9.704 1.104.294.18.388.563.207.857zm1.225-2.72c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.97-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.636-1.103 8.146-.566 11.236 1.332.367.226.487.707.26 1.07zm.106-2.833C14.385 8.614 8.54 8.42 5.148 9.45c-.52.158-1.07-.143-1.227-.662-.158-.52.143-1.07.662-1.228 3.903-1.185 10.364-.962 14.444 1.46.47.28.62.89.34 1.36-.28.47-.89.62-1.36.34z"/>
+                </svg>
+              </motion.button>
+            )}
+
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
               {isMobileMenuOpen && (
@@ -3547,6 +3733,16 @@ export default function App() {
                       >
                         <Sparkles size={18} />
                         <span className="font-medium">{t.magic}</span>
+                      </motion.button>
+                      <motion.button 
+                        whileHover={{ x: 5 }}
+                        onClick={() => { setIsSpotifyOpen(true); setIsSpotifyActive(true); setIsMobileMenuOpen(false); }}
+                        className="flex items-center gap-4 py-2.5 px-4 rounded-2xl transition-all hover:bg-[var(--text-color)]/5 text-[var(--text-color)]/80"
+                      >
+                        <svg viewBox="0 0 24 24" width={18} height={18} fill="currentColor">
+                          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.845 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.784-.97-.333.075-.664-.136-.74-.47-.075-.333.136-.662.47-.738 3.812-.87 7.085-.5 9.704 1.104.294.18.388.563.207.857zm1.225-2.72c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.97-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.636-1.103 8.146-.566 11.236 1.332.367.226.487.707.26 1.07zm.106-2.833C14.385 8.614 8.54 8.42 5.148 9.45c-.52.158-1.07-.143-1.227-.662-.158-.52.143-1.07.662-1.228 3.903-1.185 10.364-.962 14.444 1.46.47.28.62.89.34 1.36-.28.47-.89.62-1.36.34z"/>
+                        </svg>
+                        <span className="font-medium">Spotify Playlist</span>
                       </motion.button>
                     </nav>
 
