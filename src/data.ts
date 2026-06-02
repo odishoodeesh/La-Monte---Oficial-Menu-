@@ -1528,6 +1528,84 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Croissant filled with sweet Nutella.',
     calories: '520 kcal'
   },
+  {
+    id: 'sw4',
+    name: 'CROISSANT CINNAMON',
+    nameAr: 'كرواسون القرفة',
+    nameKu: 'کرواسوای دارچین',
+    price: '6,000 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/fYp0J9vh/la-monte-croissant-cinnamon.png',
+    thumbnail: 'https://i.ibb.co/99TYPhtF/la-monte-croissant-cinnamon.png',
+    description: 'Flaky croissant with elegant cinnamon dust and sweet filling.',
+    calories: '390 kcal'
+  },
+  {
+    id: 'sw5',
+    name: 'CHOCOLATE CAKE',
+    nameAr: 'كعكة الشوكولاتة',
+    nameKu: 'کێکی شوکولاتە',
+    price: '6,500 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/60cW5fTp/la-monte-chocolate-cake.png',
+    thumbnail: 'https://i.ibb.co/m5rc7M2Y/la-monte-chocolate-cake.png',
+    description: 'Rich and moist double chocolate layered cake topped with chocolate curls.',
+    calories: '450 kcal'
+  },
+  {
+    id: 'sw6',
+    name: 'PISTACHIO CAKE',
+    nameAr: 'كعكة الفستق',
+    nameKu: 'کێکی فستق',
+    price: '6,500 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/9H2npDLY/la-monte-pistachio-cake.png',
+    thumbnail: 'https://i.ibb.co/GQk7d6LP/la-monte-pistachio-cake.png',
+    description: 'Light, airy sponge cake layered with delicate pistachio pastry cream.',
+    calories: '420 kcal'
+  },
+  {
+    id: 'sw7',
+    name: 'CHOCOLATE CHEESECAKE',
+    nameAr: 'تشيز كيك الشوكولاتة',
+    nameKu: 'چیزکێکی شوکولاتە',
+    price: '6,500 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/JjrbzqxH/la-monte-chocolate-cheese-cake.png',
+    thumbnail: 'https://i.ibb.co/TMPnH1Kt/la-monte-chocolate-cheese-cake.png',
+    description: 'Velvety baked cream cheese filling on a crumbly chocolate biscuit base.',
+    calories: '490 kcal'
+  },
+  {
+    id: 'sw8',
+    name: 'PISTACHIO CHEESECAKE',
+    nameAr: 'تشيز كيك الفستق',
+    nameKu: 'چیزکێکی فستق',
+    price: '6,500 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/Zpk8ryB8/la-monte-pistachio-cheese-cake.png',
+    thumbnail: 'https://i.ibb.co/21ftrXvt/la-monte-pistachio-cheese-cake.png',
+    description: 'Creamy white chocolate and pistachio butter cheesecake with pistachio crust.',
+    calories: '480 kcal'
+  },
+  {
+    id: 'sw9',
+    name: 'LUTOS CAKE',
+    nameAr: 'كعكة اللوتس',
+    nameKu: 'کێکی لۆتۆس',
+    price: '6,500 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/N6R4Bqym/la-monte-lotus-cake.png',
+    thumbnail: 'https://i.ibb.co/QF05wVKC/la-monte-lotus-cake.png',
+    description: 'Decadent Biscoff glaze layered with soft cookie butter flavored sponge.',
+    calories: '460 kcal'
+  },
 
   // TOASTS
   {

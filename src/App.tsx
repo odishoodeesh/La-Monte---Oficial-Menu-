@@ -982,24 +982,6 @@ const AuthModal = ({
   );
 };
 
-const eidBannerTranslations = {
-  en: {
-    title: "Eid Mubarak",
-    subtitle: "Wishing you and your family a blessed and peaceful Eid filled with joy, love, and fine coffee. Celebrate with our seasonal specialties!",
-    dismiss: "Dismiss",
-  },
-  ar: {
-    title: "عيد مبارك",
-    subtitle: "كل عام وأنتم بخير! نتمنى لكم ولعائلتكم عيداً مباركاً سعيداً مليئاً بالبهجة والمحبة والقهوة الفاخرة. شاركونا الفرحة مع حلوياتنا الخاصة!",
-    dismiss: "إغلاق",
-  },
-  ku: {
-    title: "جەژنتان پیرۆز بێت",
-    subtitle: "جەژنی سەرجەم لایەک پیرۆز بێت، هیوادارین جەژنێکی پڕ لە ئارامی، خۆشی و قاوەی نایاب بەسەر ببەن. لەگەڵ ئێمە جەژن پیرۆز بکەن!",
-    dismiss: "لادان",
-  }
-};
-
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -1013,7 +995,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState<View>('menu');
   const [profileTab, setProfileTab] = useState<'favorites' | 'history'>('history');
   const [showIntro, setShowIntro] = useState(true);
-  const [showEidBanner, setShowEidBanner] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [isSpotifyOpen, setIsSpotifyOpen] = useState(false);
   const [isSpotifyActive, setIsSpotifyActive] = useState(false);
@@ -2324,76 +2305,6 @@ export default function App() {
             )}
 
             <main className="pt-60 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
-              {/* Celebrate Eid Mubarak Banner */}
-              <AnimatePresence>
-                {showEidBanner && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -30, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, height: 0, y: -20, scale: 0.95, marginBottom: 0 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="mb-6 w-full rounded-2xl md:rounded-3xl overflow-hidden shadow-xl relative border border-[#00659D]/30"
-                    style={{
-                      background: 'radial-gradient(circle at top right, #007cb3 0%, #00659D 50%, #004d77 100%)',
-                    }}
-                  >
-                    {/* Glowing golden atmosphere background elements */}
-                    <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-400/10 rounded-full -mr-16 -mt-16 blur-[40px] pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 w-36 h-36 bg-blue-300/10 rounded-full -ml-12 -mb-12 blur-[30px] pointer-events-none" />
-                    
-                    {/* Golden Crescent decoration */}
-                    <div className="absolute top-1/2 -translate-y-1/2 right-12 opacity-15 pointer-events-none hidden lg:block select-none">
-                      <svg viewBox="0 0 100 100" width="80" height="80" fill="currentColor" className="text-yellow-300">
-                        <path d="M60 20 C 37.9 20, 20 37.9, 20 60 C 20 82.1, 37.9 100, 60 100 C 51.7 87.5, 47 72.8, 47 60 C 47 47.2, 51.7 32.5, 60 20 Z" />
-                      </svg>
-                    </div>
-
-                    {/* Subtle animated stars */}
-                    <div className="absolute top-4 left-1/4 opacity-30 animate-pulse pointer-events-none">
-                      <Sparkles size={12} className="text-yellow-200" />
-                    </div>
-                    <div className="absolute bottom-4 right-1/3 opacity-45 animate-pulse pointer-events-none" style={{ animationDelay: '1.5s' }}>
-                      <Sparkles size={10} className="text-yellow-100" />
-                    </div>
-
-                    <div className="py-4 px-5 md:py-4 md:px-7 flex flex-col md:flex-row items-center gap-4 relative z-10">
-                      <div className="flex flex-col md:flex-row items-center gap-3.5 text-center md:text-left w-full">
-                        {/* Golden Glowing Emblem with animation */}
-                        <motion.div 
-                          animate={{ 
-                            y: [0, -3, 0],
-                            rotate: [0, 2, -2, 0]
-                          }}
-                          transition={{ 
-                            duration: 5, 
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                          className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-yellow-300 shadow-lg"
-                        >
-                          <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="animate-pulse">
-                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                          </svg>
-                        </motion.div>
-                        
-                        <div className="space-y-0.5 max-w-2xl flex-1">
-                          <div className="flex flex-col md:flex-row md:items-baseline gap-1.5 justify-center md:justify-start">
-                            <h2 className="text-xl md:text-2xl font-serif italic font-semibold text-white tracking-wide">
-                              {eidBannerTranslations[language].title}
-                            </h2>
-                            <span className="text-xs font-serif text-yellow-300/90 font-medium md:before:content-['•'] md:before:mx-2 block md:inline">
-                              عيد مبارك سعيد
-                            </span>
-                          </div>
-                          <p className="text-[11px] md:text-xs text-blue-50/85 leading-relaxed font-light">
-                            {eidBannerTranslations[language].subtitle}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               <AnimatePresence mode="wait">
                 {currentView === 'feedback' ? (
@@ -3763,7 +3674,7 @@ export default function App() {
                     initial={{ x: '100%' }}
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
-                               className="absolute right-0 top-0 bottom-0 w-72 glass-dark border-l border-[var(--text-color)]/10 p-6 flex flex-col gap-4 shadow-2xl z-[160] overflow-y-auto no-scrollbar"
+                    className="absolute right-0 top-0 bottom-0 w-72 glass-dark border-l border-[var(--text-color)]/10 p-6 flex flex-col gap-4 shadow-2xl z-[160] overflow-y-auto no-scrollbar"
                   >
                     <div className="flex justify-between items-center mb-2 px-2 pt-2">
                       <span className="text-xs font-bold uppercase tracking-widest opacity-40">{t.menu}</span>
