@@ -982,6 +982,53 @@ const AuthModal = ({
   );
 };
 
+const milkOptions = {
+  none: {
+    en: "Regular Milk",
+    ar: "حليب عادي",
+    ku: "شیری ئاسایی"
+  },
+  almond: {
+    en: "Almond milk (+1000 IQD)",
+    ar: "حليب بادام (+1000 IQD)",
+    ku: "شیری بادەم (+1000 IQD)"
+  },
+  oat: {
+    en: "oat milk (+1000 IQD)",
+    ar: "حليب شوفان (+1000 IQD)",
+    ku: "شیری جۆ (+1000 IQD)"
+  },
+  coconut: {
+    en: "coconut milk (+1000 IQD)",
+    ar: "حليب جوز الهند (+1000 IQD)",
+    ku: "شیری گوێزی هیندی (+1000 IQD)"
+  }
+};
+
+const isMilkDrink = (item: MenuItem | null): boolean => {
+  if (!item) return false;
+  if (item.mainCategory !== 'Drinks') return false;
+  const descLower = (item.description || '').toLowerCase();
+  const nameLower = (item.name || '').toLowerCase();
+  const categoryLower = (item.category || '').toLowerCase();
+  
+  return (
+    descLower.includes('milk') ||
+    descLower.includes('cream') ||
+    nameLower.includes('milk') ||
+    nameLower.includes('latte') ||
+    nameLower.includes('cappuccino') ||
+    nameLower.includes('cortado') ||
+    nameLower.includes('flat white') ||
+    nameLower.includes('macchiato') ||
+    categoryLower === 'milkshake' ||
+    categoryLower === 'coffee frappe' ||
+    categoryLower === 'matcha' ||
+    categoryLower === 'milk' ||
+    categoryLower === 'hot chocolate'
+  );
+};
+
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -992,6 +1039,7 @@ export default function App() {
   const [theme, setTheme] = useState<keyof typeof PALETTES>('minimal');
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'minimal' | 'compact' | 'magazine'>('grid');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [selectedMilk, setSelectedMilk] = useState<string>('none');
   const [currentView, setCurrentView] = useState<View>('menu');
   const [profileTab, setProfileTab] = useState<'favorites' | 'history'>('history');
   const [showIntro, setShowIntro] = useState(true);
@@ -1728,23 +1776,23 @@ export default function App() {
     });
   }, [deferredSearchQuery, currentView, favorites, activeMainCategory, activeCategory, activeQuickFilter, recommendedIds]);
 
-  const addToCart = useCallback((item: MenuItem, note: string = '') => {
+  const addToCart = useCallback((item: MenuItem, note: string = '', milkOpt: string = 'none') => {
     setCart(prev => {
-      const existing = prev.find(i => i.id === item.id && i.note === note);
+      const existing = prev.find(i => i.id === item.id && i.note === note && (i.selectedMilk || 'none') === milkOpt);
       if (existing) {
-        return prev.map(i => (i.id === item.id && i.note === note) ? { ...i, quantity: i.quantity + 1 } : i);
+        return prev.map(i => (i.id === item.id && i.note === note && (i.selectedMilk || 'none') === milkOpt) ? { ...i, quantity: i.quantity + 1 } : i);
       }
-      return [...prev, { ...item, quantity: 1, note }];
+      return [...prev, { ...item, quantity: 1, note, selectedMilk: milkOpt }];
     });
   }, []);
 
-  const removeFromCart = useCallback((id: string, note?: string) => {
-    setCart(prev => prev.filter(i => !(i.id === id && i.note === note)));
+  const removeFromCart = useCallback((id: string, note?: string, milkOpt?: string) => {
+    setCart(prev => prev.filter(i => !(i.id === id && i.note === note && (i.selectedMilk || 'none') === (milkOpt ?? 'none'))));
   }, []);
 
-  const updateQuantity = useCallback((id: string, delta: number, note?: string) => {
+  const updateQuantity = useCallback((id: string, delta: number, note?: string, milkOpt?: string) => {
     setCart(prev => prev.map(i => {
-      if (i.id === id && i.note === note) {
+      if (i.id === id && i.note === note && (i.selectedMilk || 'none') === (milkOpt ?? 'none')) {
         const newQty = Math.max(1, i.quantity + delta);
         return { ...i, quantity: newQty };
       }
@@ -1841,7 +1889,18 @@ export default function App() {
     }
     message += `🛒 *Items:*\n`;
     cart.forEach(item => {
-      message += `- ${item.name} x${item.quantity} (${item.price})\n`;
+      const basePriceNum = parseInt(item.price.replace(/[^0-9]/g, ''));
+      const finalPriceNum = item.selectedMilk && item.selectedMilk !== 'none' ? basePriceNum + 1000 : basePriceNum;
+      const formattedPrice = finalPriceNum.toLocaleString() + ' IQD';
+      
+      let itemLine = `- ${item.name}`;
+      if (item.selectedMilk && item.selectedMilk !== 'none') {
+        const milkLabel = item.selectedMilk === 'almond' ? 'Almond milk' : item.selectedMilk === 'oat' ? 'oat milk' : 'coconut milk';
+        itemLine += ` (${milkLabel})`;
+      }
+      itemLine += ` x${item.quantity} (${formattedPrice})\n`;
+      message += itemLine;
+
       if (item.note) {
         message += `  📝 _Note: ${item.note}_\n`;
       }
@@ -1963,7 +2022,10 @@ export default function App() {
 
   const calculateTotal = useCallback(() => {
     const total = cart.reduce((acc, item) => {
-      const price = parseInt(item.price.replace(/[^0-9]/g, ''));
+      let price = parseInt(item.price.replace(/[^0-9]/g, ''));
+      if (item.selectedMilk && item.selectedMilk !== 'none') {
+        price += 1000;
+      }
       return acc + (price * item.quantity);
     }, 0);
     return total.toLocaleString() + ' IQD';
@@ -2729,7 +2791,7 @@ export default function App() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={() => { setSelectedItem(null); setItemNote(''); }}
+                    onClick={() => { setSelectedItem(null); setItemNote(''); setSelectedMilk('none'); }}
                     className="absolute inset-0 bg-black/80 backdrop-blur-xl"
                   />
                   <motion.div
@@ -2761,12 +2823,12 @@ export default function App() {
                       <motion.button 
                         whileHover={{ scale: 1.1, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => { setSelectedItem(null); setItemNote(''); }}
+                        onClick={() => { setSelectedItem(null); setItemNote(''); setSelectedMilk('none'); }}
                         className="absolute top-5 right-5 w-9 h-9 glass rounded-full flex items-center justify-center hover:bg-white/10 transition-all z-10"
                       >
                         <X size={18} />
                       </motion.button>
-
+ 
                       <div className="flex flex-col items-center mb-4">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">
@@ -2786,7 +2848,13 @@ export default function App() {
                       </p>
                       
                       <div className="flex items-center justify-between mb-4 px-2">
-                        <span className="text-lg md:text-xl font-medium">{selectedItem.price}</span>
+                        <span className="text-lg md:text-xl font-medium">
+                          {(() => {
+                            const basePriceNum = parseInt(selectedItem.price.replace(/[^0-9]/g, ''));
+                            const finalPriceNum = selectedMilk !== 'none' ? basePriceNum + 1000 : basePriceNum;
+                            return finalPriceNum.toLocaleString() + ' IQD';
+                          })()}
+                        </span>
                         <motion.button 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -2798,6 +2866,35 @@ export default function App() {
                         </motion.button>
                       </div>
 
+                      {isMilkDrink(selectedItem) && (
+                        <div className="mb-6 text-left">
+                          <label className="text-[9px] font-black uppercase tracking-widest opacity-40 mb-3 block text-center font-mono">
+                            {language === 'en' ? 'Choose Milk Option' : language === 'ar' ? 'اختر نوع الحليب' : 'جۆری شیر دیاری بکە'}
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {(['none', 'almond', 'oat', 'coconut'] as const).map((opt) => {
+                              const isSelected = selectedMilk === opt;
+                              return (
+                                <motion.button
+                                  key={opt}
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onClick={() => setSelectedMilk(opt)}
+                                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-[11px] font-semibold ${
+                                    isSelected
+                                      ? 'bg-[var(--text-color)] text-[var(--bg-color)] border-[var(--text-color)] shadow-md'
+                                      : 'bg-white/5 border-white/10 hover:border-white/20 text-white'
+                                  }`}
+                                  type="button"
+                                >
+                                  <span className="text-center select-none">{milkOptions[opt][language]}</span>
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+ 
                       <div className="mb-4 text-left">
                         <label className="text-[8px] font-bold uppercase tracking-widest opacity-40 mb-1.5 block ml-1 text-center">Special Note (Optional)</label>
                         <textarea 
@@ -2807,15 +2904,16 @@ export default function App() {
                           className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-white/20 transition-all placeholder:text-white/20 resize-none h-20 text-center"
                         />
                       </div>
-
+ 
                       <div className="flex gap-3">
                         <motion.button 
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.99 }}
                           onClick={() => { 
-                            addToCart(selectedItem, itemNote); 
+                            addToCart(selectedItem, itemNote, selectedMilk); 
                             setSelectedItem(null); 
                             setItemNote('');
+                            setSelectedMilk('none');
                           }}
                           className="flex-grow bg-[var(--text-color)] text-[var(--bg-color)] py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:opacity-90 transition-all shadow-xl"
                         >
@@ -2925,13 +3023,30 @@ export default function App() {
                                 <motion.button 
                                   whileHover={{ scale: 1.2, color: "#ef4444" }}
                                   whileTap={{ scale: 0.8 }}
-                                  onClick={() => removeFromCart(item.id, item.note)} 
+                                  onClick={() => removeFromCart(item.id, item.note, item.selectedMilk)} 
                                   className="text-[var(--text-color)]/20 hover:text-red-500 transition-colors"
                                 >
                                   <Trash2 size={14} />
                                 </motion.button>
                               </div>
-                              <p className="text-[11px] text-[var(--text-color)]/40 mb-1.5">{item.price}</p>
+                              
+                              {(() => {
+                                const basePriceNum = parseInt(item.price.replace(/[^0-9]/g, ''));
+                                const finalPriceNum = item.selectedMilk && item.selectedMilk !== 'none' ? basePriceNum + 1000 : basePriceNum;
+                                return (
+                                  <p className="text-[11px] text-[var(--text-color)]/40 mb-1.5">
+                                    {finalPriceNum.toLocaleString() + ' IQD'}
+                                  </p>
+                                );
+                              })()}
+
+                              {item.selectedMilk && item.selectedMilk !== 'none' && (
+                                <div className="mb-2 px-2 py-1 bg-[var(--text-color)]/5 border border-[var(--text-color)]/5 rounded-lg inline-block">
+                                  <p className="text-[9px] font-bold text-[var(--accent-color)] leading-none text-center">
+                                    🥛 {item.selectedMilk === 'almond' ? 'Almond Milk' : item.selectedMilk === 'oat' ? 'Oat Milk' : 'Coconut Milk'}
+                                  </p>
+                                </div>
+                              )}
                               
                               {item.note && (
                                 <div className="mb-2 p-1.5 bg-[var(--text-color)]/5 rounded-lg border border-[var(--text-color)]/5">
@@ -2944,7 +3059,7 @@ export default function App() {
                                   <motion.button 
                                     whileHover={{ scale: 1.2 }}
                                     whileTap={{ scale: 0.8 }}
-                                    onClick={() => updateQuantity(item.id, -1, item.note)} 
+                                    onClick={() => updateQuantity(item.id, -1, item.note, item.selectedMilk)} 
                                     className="text-[var(--text-color)]/40 hover:text-[var(--text-color)]"
                                   >
                                     <Minus size={12} />
@@ -2953,7 +3068,7 @@ export default function App() {
                                   <motion.button 
                                     whileHover={{ scale: 1.2 }}
                                     whileTap={{ scale: 0.8 }}
-                                    onClick={() => updateQuantity(item.id, 1, item.note)} 
+                                    onClick={() => updateQuantity(item.id, 1, item.note, item.selectedMilk)} 
                                     className="text-[var(--text-color)]/40 hover:text-[var(--text-color)]"
                                   >
                                     <Plus size={12} />
@@ -3269,28 +3384,39 @@ export default function App() {
                     </div>
 
                     <div className="space-y-4 mb-8 max-h-[40vh] overflow-y-auto pr-2 no-scrollbar">
-                      {selectedOrder.items.map((item, i) => (
-                        <div key={i} className="py-3 border-b border-white/5 last:border-0 group">
-                          <div className="flex justify-between items-start mb-1">
-                            <div className="flex items-center gap-3">
-                              <span className="text-sm text-[var(--text-color)]/40 font-bold">{item.quantity}x</span>
-                              <span className="text-sm">{item.name}</span>
-                              <motion.button
-                                whileHover={{ scale: 1.2 }}
-                                whileTap={{ scale: 0.8 }}
-                                onClick={(e) => toggleFavorite(item.id, e)}
-                                className={`opacity-0 group-hover:opacity-100 transition-opacity ${favorites.includes(item.id) ? 'text-red-500' : 'text-[var(--text-color)]/20'}`}
-                              >
-                                <Heart size={14} fill={favorites.includes(item.id) ? "currentColor" : "none"} />
-                              </motion.button>
+                      {selectedOrder.items.map((item, i) => {
+                        const basePriceNum = parseInt(item.price.replace(/[^0-9]/g, ''));
+                        const finalPriceNum = item.selectedMilk && item.selectedMilk !== 'none' ? basePriceNum + 1000 : basePriceNum;
+                        const formattedPrice = finalPriceNum.toLocaleString() + ' IQD';
+
+                        return (
+                          <div key={i} className="py-3 border-b border-white/5 last:border-0 group">
+                            <div className="flex justify-between items-start mb-1">
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm text-[var(--text-color)]/40 font-bold">{item.quantity}x</span>
+                                <span className="text-sm">{item.name}</span>
+                                <motion.button
+                                  whileHover={{ scale: 1.2 }}
+                                  whileTap={{ scale: 0.8 }}
+                                  onClick={(e) => toggleFavorite(item.id, e)}
+                                  className={`opacity-0 group-hover:opacity-100 transition-opacity ${favorites.includes(item.id) ? 'text-red-500' : 'text-[var(--text-color)]/20'}`}
+                                >
+                                  <Heart size={14} fill={favorites.includes(item.id) ? "currentColor" : "none"} />
+                                </motion.button>
+                              </div>
+                              <span className="text-sm font-medium">{formattedPrice}</span>
                             </div>
-                            <span className="text-sm font-medium">{item.price}</span>
+                            {item.selectedMilk && item.selectedMilk !== 'none' && (
+                              <p className="text-[10px] text-[var(--accent-color)] font-bold ml-8">
+                                🥛 {item.selectedMilk === 'almond' ? 'Almond Milk' : item.selectedMilk === 'oat' ? 'Oat Milk' : 'Coconut Milk'}
+                              </p>
+                            )}
+                            {item.note && (
+                              <p className="text-[10px] text-[var(--text-color)]/30 italic ml-8">Note: {item.note}</p>
+                            )}
                           </div>
-                          {item.note && (
-                            <p className="text-[10px] text-[var(--text-color)]/30 italic ml-8">Note: {item.note}</p>
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     <div className="space-y-4">

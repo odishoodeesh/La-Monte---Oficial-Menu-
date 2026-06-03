@@ -50,4 +50,5 @@ export interface MenuItem {
 export interface CartItem extends MenuItem {
   quantity: number;
   note?: string;
+  selectedMilk?: string;
 }
