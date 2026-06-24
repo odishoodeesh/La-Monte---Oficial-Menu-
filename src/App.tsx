@@ -1043,6 +1043,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState<View>('menu');
   const [profileTab, setProfileTab] = useState<'favorites' | 'history'>('history');
   const [showIntro, setShowIntro] = useState(true);
+  const [showPromo, setShowPromo] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [isSpotifyOpen, setIsSpotifyOpen] = useState(false);
   const [isSpotifyActive, setIsSpotifyActive] = useState(false);
@@ -1200,6 +1201,8 @@ export default function App() {
       if (session?.user) {
         fetchUserData(session.user.id, favoritesRef.current, orderHistoryRef.current);
       }
+    }).catch(err => {
+      console.warn('Failed to retrieve Supabase session:', err);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -2120,7 +2123,6 @@ export default function App() {
                 <div className="h-px w-24 bg-gradient-to-r from-transparent via-[var(--text-color)]/40 to-transparent mb-4" />
                 <p className="text-[10px] uppercase tracking-[0.8em] text-[var(--text-color)]/40 font-bold">Experience the Dawn</p>
               </motion.div>
-
 
             </div>
 
@@ -3950,6 +3952,128 @@ export default function App() {
                 </div>
               )}
             </AnimatePresence>
+
+            {/* Elegant Floating Promo Card - Rendered after Intro on Main Landing Page */}
+            <AnimatePresence>
+              {showPromo && (
+                <>
+                  {/* Fullscreen Blur Backdrop */}
+                  <motion.div
+                    key="promo-backdrop"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="fixed inset-0 bg-[#0c0a09]/40 backdrop-blur-md z-[115] pointer-events-auto cursor-pointer"
+                    onClick={() => setShowPromo(false)}
+                  />
+
+                  <motion.div
+                    key="promo-card"
+                    initial={{ opacity: 0, scale: 0.85, y: 50 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.85, y: 30 }}
+                    transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className="fixed inset-0 z-[120] flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 p-6 pointer-events-none"
+                  >
+                  {/* Floating Dismiss Button in corner */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowPromo(false);
+                    }}
+                    className="fixed top-6 right-6 md:top-10 md:right-10 w-10 h-10 bg-black/60 hover:bg-black/90 text-white/85 hover:text-white border border-white/10 rounded-full flex items-center justify-center transition-all z-30 shadow-lg backdrop-blur-sm pointer-events-auto"
+                  >
+                    <X size={18} />
+                  </button>
+
+                  {/* Floating Drink Image with infinite bobbing animation (Larger) */}
+                  <motion.div
+                    animate={{ y: [0, -20, 0] }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
+                    }}
+                    className="relative w-72 h-96 md:w-[380px] md:h-[480px] flex-shrink-0 flex items-center justify-center drop-shadow-[0_25px_45px_rgba(0,0,0,0.8)] cursor-pointer pointer-events-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const promoItem = MENU_ITEMS.find(item => item.id === 'mt7');
+                      if (promoItem) {
+                        setSelectedItem(promoItem);
+                      }
+                    }}
+                  >
+                    <img
+                      src="https://i.ibb.co/nNxNPyq0/f-YO1rf-NOhfyr-Sj-E-Neyle-LLMSla-Vy.png"
+                      alt="LA MONTE MATCHA"
+                      className="w-full h-full object-contain select-none"
+                      referrerPolicy="no-referrer"
+                    />
+                    
+                    {/* (NEW!) Label floating on the drink */}
+                    <div className="absolute top-6 left-6 bg-amber-500 text-black text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.5)]">
+                      (NEW!)
+                    </div>
+                  </motion.div>
+
+                  {/* Floating Details with dark drop shadows to ensure readability on any background */}
+                  <div className="flex flex-col items-center md:items-start text-center md:text-left text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)] pointer-events-auto">
+                    <h3 className="font-serif italic text-3xl text-amber-100 tracking-wide mb-1 font-bold select-none">
+                      LA MONTE MATCHA
+                    </h3>
+                    <p className="text-[10px] text-amber-500 font-black uppercase tracking-[0.25em] mb-4 select-none">
+                      Signature Creation
+                    </p>
+
+                    {/* Ingredients Section */}
+                    <div className="mb-4 text-center md:text-left select-none">
+                      <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2">
+                        Ingredients
+                      </p>
+                      <div className="flex flex-wrap justify-center md:justify-start items-center gap-1.5">
+                        <span className="text-[10px] font-mono tracking-widest text-amber-200/90 font-bold bg-black/60 border border-white/10 px-2.5 py-1 rounded-md">
+                          APPLE
+                        </span>
+                        <span className="text-white/40 font-mono text-[8px]">•</span>
+                        <span className="text-[10px] font-mono tracking-widest text-amber-200/90 font-bold bg-black/60 border border-white/10 px-2.5 py-1 rounded-md">
+                          MARTINI
+                        </span>
+                        <span className="text-white/40 font-mono text-[8px]">•</span>
+                        <span className="text-[10px] font-mono tracking-widest text-amber-200/90 font-bold bg-black/60 border border-white/10 px-2.5 py-1 rounded-md">
+                          MATCHA
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Price and Action Button */}
+                    <div className="flex items-center gap-5 mt-2">
+                      <div className="text-left select-none">
+                        <p className="text-[8px] uppercase tracking-widest text-white/50 font-semibold mb-0.5">Price</p>
+                        <p className="font-serif italic text-xl text-amber-300 font-bold">7,000 IQD</p>
+                      </div>
+
+                      <motion.button
+                        whileHover={{ scale: 1.05, backgroundColor: "#f59e0b" }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const promoItem = MENU_ITEMS.find(item => item.id === 'mt7');
+                          if (promoItem) {
+                            setSelectedItem(promoItem);
+                          }
+                        }}
+                        className="bg-amber-500 text-black px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] shadow-[0_4px_25px_rgba(245,158,11,0.35)] transition-all hover:shadow-[0_4px_30px_rgba(245,158,11,0.6)]"
+                      >
+                        Order Now
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

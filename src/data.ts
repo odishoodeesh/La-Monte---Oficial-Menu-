@@ -1374,6 +1374,21 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Iced coconut matcha latte.',
     calories: '300 kcal'
   },
+  {
+    id: 'mt7',
+    name: 'LA MONTE MATCHA',
+    nameAr: 'لا مونتي ماتشا',
+    nameKu: 'لا مۆنتی ماچا',
+    price: '7,000 IQD',
+    category: 'Matcha',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/nNxNPyq0/f-YO1rf-NOhfyr-Sj-E-Neyle-LLMSla-Vy.png',
+    thumbnail: 'https://i.ibb.co/nNxNPyq0/f-YO1rf-NOhfyr-Sj-E-Neyle-LLMSla-Vy.png',
+    description: 'Matcha refreshing drink with apple, martini (non-alcoholic) flavor, and premium matcha.',
+    descAr: 'مشروب ماتشا منعش بنكهة التفاح، المارتيني (خالي من الكحول)، والماتشا الفاخرة.',
+    descKu: 'خواردنەوەیەکی نوێخوازکەری ماچا بە تامی سێو، مارتینی (بێ کحول)، و ماچای نایاب.',
+    calories: '240 kcal'
+  },
 
   // CHIA SEEDS (Subcategory 18)
   {
