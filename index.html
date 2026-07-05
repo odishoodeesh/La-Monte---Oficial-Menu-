@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LA MONTE (OFFICIAL MENU)</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/995h3pcg/logo.png" />
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "7ef3de6a-8be9-464a-99c6-d977f0899b49",
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
