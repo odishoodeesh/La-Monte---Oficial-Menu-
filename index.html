@@ -9,9 +9,17 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "7ef3de6a-8be9-464a-99c6-d977f0899b49",
-        });
+        if (window.location.hostname.includes('lamonte.cafe')) {
+          try {
+            await OneSignal.init({
+              appId: "7ef3de6a-8be9-464a-99c6-d977f0899b49",
+            });
+          } catch (err) {
+            console.warn('OneSignal initialization error:', err);
+          }
+        } else {
+          console.log('OneSignal skipped: OneSignal is configured to only run on www.lamonte.cafe');
+        }
       });
     </script>
   </head>
