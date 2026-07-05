@@ -9,9 +9,21 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "7ef3de6a-8be9-464a-99c6-d977f0899b49",
-        });
+        const hostname = window.location.hostname;
+        const isProduction = hostname.includes('lamonte.cafe');
+        const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+        
+        if (isProduction || isLocal) {
+          try {
+            await OneSignal.init({
+              appId: "7ef3de6a-8be9-464a-99c6-d977f0899b49",
+            });
+          } catch (err) {
+            console.warn('OneSignal initialization failed:', err);
+          }
+        } else {
+          console.log('OneSignal skipped on non-production domain:', hostname);
+        }
       });
     </script>
   </head>
