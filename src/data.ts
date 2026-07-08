@@ -1389,6 +1389,21 @@ export const MENU_ITEMS: MenuItem[] = [
     descKu: 'خواردنەوەیەکی نوێخوازکەری ماچا بە تامی سێو، مارتینی (بێ کحول)، و ماچای نایاب.',
     calories: '240 kcal'
   },
+  {
+    id: 'mt8',
+    name: 'La Monte Matcha',
+    nameAr: 'لا مونتي ماتشا الكلاسيكي',
+    nameKu: 'لا مۆنتی ماچای کلاسیک',
+    price: '7,000 IQD',
+    category: 'Matcha',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/DgG0XNwP/la-monte-la-monte-mathca.png',
+    thumbnail: 'https://i.ibb.co/wrJ5HTpZ/la-monte-la-monte-mathca.png',
+    description: 'Freshly prepared premium grade matcha with rich cream and natural sweetness.',
+    descAr: 'ماتشا فاخرة محضرة طازجة مع الكريمة الغنية والحلاوة الطبيعية.',
+    descKu: 'ماچای کوالیتی نایابی تازە ئامادەکراو لەگەڵ کرێمی دەوڵەمەند و شیرینی سروشتی.',
+    calories: '220 kcal'
+  },
 
   // CHIA SEEDS (Subcategory 18)
   {
