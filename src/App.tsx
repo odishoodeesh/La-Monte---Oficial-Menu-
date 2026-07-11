@@ -14,7 +14,7 @@ import {
   LayoutGrid, LayoutList, LayoutTemplate, Palette, Menu,
   Volume2, VolumeX, Maximize2, Calendar, MapPin, 
   Languages, Globe, User as UserIcon, LogOut, Mail, Lock,
-  RefreshCw, Cloud
+  RefreshCw, Cloud, Instagram
 } from 'lucide-react';
 import { supabase } from './lib/supabase';
 import { User } from '@supabase/supabase-js';
@@ -2292,6 +2292,8 @@ export default function App() {
               </div>
             </motion.header>
 
+
+
             {/* Top Floating Navigation (Under Header) */}
             {currentView === 'menu' && (
               <motion.div 
@@ -3765,6 +3767,42 @@ export default function App() {
                   </motion.button>
                 </div>
               </motion.div>
+            )}
+
+            {/* TikTok Floating Toggle Button (Stacked above Instagram on Left Side) */}
+            {!showIntro && (
+              <motion.a
+                href="https://www.tiktok.com/@lamonte_coffeeshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="fixed left-6 bottom-[152px] md:bottom-auto md:top-[calc(85%-128px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-black hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                title="Follow us on TikTok"
+              >
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="relative z-10">
+                  <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.74-.22-.21-.4-.45-.58-.7-.02 2.44-.01 4.88-.01 7.32-.03 2.54-.74 5.13-2.61 6.84-1.95 1.86-4.85 2.42-7.44 1.73-2.73-.67-5-2.91-5.58-5.69-.73-3.18.57-6.72 3.29-8.49C6.6 8.3 8.1 7.96 9.61 8.21v4.09c-1.21-.34-2.6-.04-3.41.87-.85 1-.9 2.52-.16 3.56.76 1.13 2.18 1.66 3.48 1.34 1.25-.26 2.13-1.39 2.16-2.66.02-3.8 0-7.61.01-11.41.01-1.33.01-2.66.01-3.99H12.53z" />
+                </svg>
+              </motion.a>
+            )}
+
+            {/* Instagram Floating Toggle Button (Stacked above Spotify on Left Side) */}
+            {!showIntro && (
+              <motion.a
+                href="https://www.instagram.com/lamonte_coffeeshop/"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="fixed left-6 bottom-[96px] md:bottom-auto md:top-[calc(85%-64px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[#E1306C] hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                title="Follow us on Instagram"
+              >
+                <Instagram size={22} />
+              </motion.a>
             )}
 
             {/* Spotify Floating Toggle Button (Left Side) */}
