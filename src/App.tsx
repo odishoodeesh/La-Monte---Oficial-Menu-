@@ -3840,10 +3840,10 @@ export default function App() {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed left-3 md:left-4 bottom-[128px] md:bottom-auto md:top-[calc(91%-128px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-black hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                className="fixed left-3 md:left-4 bottom-[128px] md:bottom-[144px] z-[100] w-12 h-12 md:w-13 md:h-13 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-black hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
                 title="Follow us on TikTok"
               >
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="relative z-10">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="relative z-10">
                   <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.74-.22-.21-.4-.45-.58-.7-.02 2.44-.01 4.88-.01 7.32-.03 2.54-.74 5.13-2.61 6.84-1.95 1.86-4.85 2.42-7.44 1.73-2.73-.67-5-2.91-5.58-5.69-.73-3.18.57-6.72 3.29-8.49C6.6 8.3 8.1 7.96 9.61 8.21v4.09c-1.21-.34-2.6-.04-3.41.87-.85 1-.9 2.52-.16 3.56.76 1.13 2.18 1.66 3.48 1.34 1.25-.26 2.13-1.39 2.16-2.66.02-3.8 0-7.61.01-11.41.01-1.33.01-2.66.01-3.99H12.53z" />
                 </svg>
               </motion.a>
@@ -3859,10 +3859,10 @@ export default function App() {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed left-3 md:left-4 bottom-[72px] md:bottom-auto md:top-[calc(91%-64px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[#E1306C] hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                className="fixed left-3 md:left-4 bottom-[72px] md:bottom-[84px] z-[100] w-12 h-12 md:w-13 md:h-13 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[#E1306C] hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
                 title="Follow us on Instagram"
               >
-                <Instagram size={22} />
+                <Instagram size={20} />
               </motion.a>
             )}
 
@@ -3874,13 +3874,13 @@ export default function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { setIsSpotifyOpen(true); setIsSpotifyActive(true); }}
-                className="fixed left-3 md:left-4 bottom-4 md:bottom-auto md:top-[91%] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] cursor-pointer transition-all duration-300"
+                className="fixed left-3 md:left-4 bottom-4 md:bottom-6 z-[100] w-12 h-12 md:w-13 md:h-13 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] cursor-pointer transition-all duration-300"
                 aria-label="Open Spotify Playlist"
               >
                 {isSpotifyActive && !isSpotifyOpen && (
                   <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[var(--text-color)] border border-[var(--bg-color)] rounded-full z-20" />
                 )}
-                <svg viewBox="0 0 24 24" width={22} height={22} fill="currentColor" className="relative z-10">
+                <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor" className="relative z-10">
                   <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.845 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.784-.97-.333.075-.664-.136-.74-.47-.075-.333.136-.662.47-.738 3.812-.87 7.085-.5 9.704 1.104.294.18.388.563.207.857zm1.225-2.72c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.97-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.636-1.103 8.146-.566 11.236 1.332.367.226.487.707.26 1.07zm.106-2.833C14.385 8.614 8.54 8.42 5.148 9.45c-.52.158-1.07-.143-1.227-.662-.158-.52.143-1.07.662-1.228 3.903-1.185 10.364-.962 14.444 1.46.47.28.62.89.34 1.36-.28.47-.89.62-1.36.34z"/>
                 </svg>
               </motion.button>
