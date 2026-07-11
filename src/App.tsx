@@ -1048,6 +1048,67 @@ export default function App() {
   const [isSpotifyOpen, setIsSpotifyOpen] = useState(false);
   const [isSpotifyActive, setIsSpotifyActive] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const subCategoriesRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Auto scroll sub-categories bar slowly back and forth
+  useEffect(() => {
+    // If intro screen is still showing, wait
+    if (showIntro) return;
+
+    const container = subCategoriesRef.current;
+    if (!container) return;
+
+    let animationFrameId: number;
+    const scrollSpeed = 0.25; // extremely slow and smooth scroll speed (pixels per frame)
+    let direction = 1; // 1 for scrolling to the right (items scroll left), -1 for scrolling to the left
+
+    let isHovered = false;
+    let isTouching = false;
+
+    const handleMouseEnter = () => { isHovered = true; };
+    const handleMouseLeave = () => { isHovered = false; };
+    const handleTouchStart = () => { isTouching = true; };
+    const handleTouchEnd = () => { isTouching = false; };
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('touchstart', handleTouchStart);
+    container.addEventListener('touchend', handleTouchEnd);
+
+    // Initial position
+    container.scrollLeft = 0;
+
+    const startScroll = () => {
+      if (container && !isHovered && !isTouching) {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (maxScroll > 1) {
+          container.scrollLeft += scrollSpeed * direction;
+          if (container.scrollLeft >= maxScroll - 1) {
+            direction = -1; // change direction to scroll left
+          } else if (container.scrollLeft <= 1) {
+            direction = 1; // change direction to scroll right
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(startScroll);
+    };
+
+    // Small delay before starting auto-scroll so user can see it static initially
+    const delayTimer = setTimeout(() => {
+      animationFrameId = requestAnimationFrame(startScroll);
+    }, 1500);
+
+    return () => {
+      clearTimeout(delayTimer);
+      cancelAnimationFrame(animationFrameId);
+      if (container) {
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [activeMainCategory, currentView, showIntro]);
 
   // Intro Screen Auto Dismiss
   useEffect(() => {
@@ -2330,7 +2391,7 @@ export default function App() {
                 </nav>
 
                 {/* Sub Categories */}
-                <nav className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full w-[337.5px] h-[35.9141px]">
+                <nav ref={subCategoriesRef} className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full w-[337.5px] h-[35.9141px]">
                   {filteredCategories.map((cat) => (
                     <motion.button
                       key={cat.name}
@@ -3779,7 +3840,7 @@ export default function App() {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed left-6 bottom-[152px] md:bottom-auto md:top-[calc(85%-128px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-black hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                className="fixed left-3 md:left-4 bottom-[128px] md:bottom-auto md:top-[calc(91%-128px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-black hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
                 title="Follow us on TikTok"
               >
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="relative z-10">
@@ -3798,7 +3859,7 @@ export default function App() {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed left-6 bottom-[96px] md:bottom-auto md:top-[calc(85%-64px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[#E1306C] hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
+                className="fixed left-3 md:left-4 bottom-[72px] md:bottom-auto md:top-[calc(91%-64px)] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[#E1306C] hover:text-white cursor-pointer transition-all duration-300 pointer-events-auto"
                 title="Follow us on Instagram"
               >
                 <Instagram size={22} />
@@ -3813,7 +3874,7 @@ export default function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { setIsSpotifyOpen(true); setIsSpotifyActive(true); }}
-                className="fixed left-6 bottom-10 md:bottom-auto md:top-[85%] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] cursor-pointer transition-all duration-300"
+                className="fixed left-3 md:left-4 bottom-4 md:bottom-auto md:top-[91%] -translate-y-1/2 z-[100] w-12 h-12 md:w-14 md:h-14 glass border border-[var(--text-color)]/15 text-[var(--text-color)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] cursor-pointer transition-all duration-300"
                 aria-label="Open Spotify Playlist"
               >
                 {isSpotifyActive && !isSpotifyOpen && (
