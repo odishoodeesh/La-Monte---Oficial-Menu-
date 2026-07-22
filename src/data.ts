@@ -1405,46 +1405,75 @@ export const MENU_ITEMS: MenuItem[] = [
     calories: '220 kcal'
   },
 
-  // CHIA SEEDS (Subcategory 18)
+  // CHIA SEEDS
   {
     id: 'cs1',
-    name: 'Strawberry Chia Seeds',
-    nameAr: 'بذور شيا بالفراولة',
-    nameKu: 'چیا سیدس ب فرەولە',
+    name: 'Coconut & Chocolate Chia Seeds',
     price: '5,000 IQD',
     category: 'Chia Seeds',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/gZJ9XLTV/la-monte-strawberry-chia-seeds.png',
-    thumbnail: 'https://i.ibb.co/YBhQKFkZ/la-monte-strawberry-chia-seeds.png',
-    description: 'Strawberry flavored chia seeds drink.',
-    calories: '280 kcal'
+    image: 'https://i.ibb.co/mFc8ssVL/coconut-chocolate-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/n8LC22NH/coconut-chocolate-Chia-Seeds.png',
+    description: 'Coconut and chocolate flavored chia seeds drink.',
+    calories: '320 kcal'
   },
   {
     id: 'cs2',
     name: 'Avocado & Banana Chia Seeds',
-    nameAr: 'بذور شيا بالأفوكادو والموز',
-    nameKu: 'چیا سیدس ب ئەڤۆکادۆ و مۆز',
     price: '5,000 IQD',
     category: 'Chia Seeds',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/ZsZGnrt/la-monte-avocado-banana-chia-seeds-1.png',
-    thumbnail: 'https://i.ibb.co/DXqzxFs/la-monte-avocado-banana-chia-seeds-1.png',
+    image: 'https://i.ibb.co/JR5Q8ycg/avocado-and-banana-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/8D6cGdmt/avocado-and-banana-Chia-Seeds.png',
     description: 'Avocado and banana flavored chia seeds drink.',
     calories: '350 kcal'
   },
   {
     id: 'cs3',
     name: 'Mango Chia Seeds',
-    nameAr: 'بذور شيا بالمانجو',
-    nameKu: 'چیا سیدس ب مانگۆ',
     price: '5,000 IQD',
     category: 'Chia Seeds',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/kVwb3Gyd/la-monte-mango-chia-seeds.png',
-    thumbnail: 'https://i.ibb.co/mr2ZvRBx/la-monte-mango-chia-seeds.png',
+    image: 'https://i.ibb.co/fVPx5Dv4/mango-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/spMVGWHy/mango-Chia-Seeds.png',
     description: 'Mango flavored chia seeds drink.',
-    calories: '320 kcal'
+    calories: '280 kcal'
   },
+  {
+    id: 'cs4',
+    name: 'Blueberry Mango Chia Seeds',
+    price: '5,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/gbnbG0SC/blueberry-mango-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/V0K0dFg8/blueberry-mango-Chia-Seeds.png',
+    description: 'Blueberry and mango flavored chia seeds drink.',
+    calories: '300 kcal'
+  },
+  {
+    id: 'cs5',
+    name: 'Raspberry Chia Seeds',
+    price: '5,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/rfKD3TYP/raspberry-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/k6VNJkjn/raspberry-Chia-Seeds.png',
+    description: 'Raspberry flavored chia seeds drink.',
+    calories: '260 kcal'
+  },
+  {
+    id: 'cs6',
+    name: 'Strawberry Chia Seeds',
+    price: '5,000 IQD',
+    category: 'Chia Seeds',
+    mainCategory: 'Drinks',
+    image: 'https://i.ibb.co/pjZvWVXx/strawberry-Chia-Seeds.png',
+    thumbnail: 'https://i.ibb.co/d460bCKr/strawberry-Chia-Seeds.png',
+    description: 'Strawberry flavored chia seeds drink.',
+    calories: '280 kcal'
+  },
+
+  // SHISHA
 
   // SHISHA
   {
