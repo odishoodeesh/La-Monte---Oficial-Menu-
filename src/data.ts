@@ -1311,35 +1311,32 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'mt1',
     name: 'Hot Matcha',
-    price: '6,000 IQD',
+    price: '7,000 IQD',
     category: 'Matcha',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/67X8S2d1/la-monte-matcha.png',
     thumbnail: 'https://i.ibb.co/yc4pCD3Y/la-monte-matcha.png',
-    description: 'Hot matcha latte.',
-    calories: '180 kcal'
+    description: 'Hot matcha latte.'
   },
   {
     id: 'mt2',
     name: 'Iced Matcha',
-    price: '6,500 IQD',
+    price: '7,500 IQD',
     category: 'Matcha',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/RGRdC867/la-monte-iced-matcha.png',
     thumbnail: 'https://i.ibb.co/20GHjJM5/la-monte-iced-matcha.png',
-    description: 'Iced matcha latte.',
-    calories: '210 kcal'
+    description: 'Iced matcha latte.'
   },
   {
     id: 'mt3',
     name: 'Hot Vanilla Matcha',
-    price: '6,500 IQD',
+    price: '7,500 IQD',
     category: 'Matcha',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/kVwxw1n1/la-monte-hot-vanilla-matcha.png',
     thumbnail: 'https://i.ibb.co/1YPLP6V6/la-monte-hot-vanilla-matcha.png',
-    description: 'Hot vanilla matcha latte.',
-    calories: '260 kcal'
+    description: 'Hot vanilla matcha latte.'
   },
   {
     id: 'mt4',
@@ -1349,8 +1346,7 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Q7bZZ2wg/la-monte-iced-vanilla-matcha.png',
     thumbnail: 'https://i.ibb.co/qLyzztQS/la-monte-iced-vanilla-matcha.png',
-    description: 'Iced vanilla matcha latte.',
-    calories: '290 kcal'
+    description: 'Iced vanilla matcha latte.'
   },
   {
     id: 'mt5',
@@ -1360,8 +1356,7 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/Qj7qkmMQ/la-monte-iced-matcha-strawberry.png',
     thumbnail: 'https://i.ibb.co/NngkrYKC/la-monte-iced-matcha-strawberry.png',
-    description: 'Iced strawberry matcha latte.',
-    calories: '320 kcal'
+    description: 'Iced strawberry matcha latte.'
   },
   {
     id: 'mt6',
@@ -1371,38 +1366,27 @@ export const MENU_ITEMS: MenuItem[] = [
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/pvfpZ3fJ/la-monte-iced-coconut-matcha-1.png',
     thumbnail: 'https://i.ibb.co/svKrQFKy/la-monte-iced-coconut-matcha-1.png',
-    description: 'Iced coconut matcha latte.',
-    calories: '300 kcal'
+    description: 'Iced coconut matcha latte.'
   },
   {
     id: 'mt7',
-    name: 'LA MONTE MATCHA',
-    nameAr: 'لا مونتي ماتشا',
-    nameKu: 'لا مۆنتی ماچا',
-    price: '7,000 IQD',
+    name: 'Matcha Rose Fizz',
+    price: '8,000 IQD',
     category: 'Matcha',
     mainCategory: 'Drinks',
-    image: 'https://i.ibb.co/nNxNPyq0/f-YO1rf-NOhfyr-Sj-E-Neyle-LLMSla-Vy.png',
-    thumbnail: 'https://i.ibb.co/nNxNPyq0/f-YO1rf-NOhfyr-Sj-E-Neyle-LLMSla-Vy.png',
-    description: 'Matcha refreshing drink with apple, martini (non-alcoholic) flavor, and premium matcha.',
-    descAr: 'مشروب ماتشا منعش بنكهة التفاح، المارتيني (خالي من الكحول)، والماتشا الفاخرة.',
-    descKu: 'خواردنەوەیەکی نوێخوازکەری ماچا بە تامی سێو، مارتینی (بێ کحول)، و ماچای نایاب.',
-    calories: '240 kcal'
+    image: 'https://i.ibb.co/Ng9sXW8w/Matcha-Rose-Fizz.png',
+    thumbnail: 'https://i.ibb.co/p6fxg4tC/Matcha-Rose-Fizz.png',
+    description: 'Matcha refreshing drink with rose flavor.'
   },
   {
     id: 'mt8',
     name: 'La Monte Matcha',
-    nameAr: 'لا مونتي ماتشا الكلاسيكي',
-    nameKu: 'لا مۆنتی ماچای کلاسیک',
     price: '7,000 IQD',
     category: 'Matcha',
     mainCategory: 'Drinks',
     image: 'https://i.ibb.co/DgG0XNwP/la-monte-la-monte-mathca.png',
     thumbnail: 'https://i.ibb.co/wrJ5HTpZ/la-monte-la-monte-mathca.png',
-    description: 'Freshly prepared premium grade matcha with rich cream and natural sweetness.',
-    descAr: 'ماتشا فاخرة محضرة طازجة مع الكريمة الغنية والحلاوة الطبيعية.',
-    descKu: 'ماچای کوالیتی نایابی تازە ئامادەکراو لەگەڵ کرێمی دەوڵەمەند و شیرینی سروشتی.',
-    calories: '220 kcal'
+    description: 'Freshly prepared premium grade matcha with rich cream and natural sweetness.'
   },
 
   // CHIA SEEDS
