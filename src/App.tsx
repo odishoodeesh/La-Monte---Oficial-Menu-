@@ -17,12 +17,14 @@ import {
   RefreshCw, Cloud, Instagram
 } from 'lucide-react';
 import { supabase } from './lib/supabase';
+import { AIGradientBorder } from './components/AIGradientBorder';
+import BuildBreakfastView from './components/BuildBreakfastView';
 import { User } from '@supabase/supabase-js';
 import { Category, MenuItem, CartItem, MainCategory } from './types';
 import { MENU_ITEMS } from './data';
 import { fetchDuhokWeather, WeatherData } from './services/weatherService';
 
-type View = 'menu' | 'profile' | 'reservation' | 'feedback';
+type View = 'menu' | 'profile' | 'reservation' | 'feedback' | 'build-breakfast';
 
 interface PaletteColors {
   bg: string;
@@ -2228,74 +2230,80 @@ export default function App() {
                   />
                 </motion.div>
                 
-                <div className="h-8 w-px bg-white/10 hidden md:block" />
+                {currentView !== 'build-breakfast' && (
+                    <div className="flex items-center">
+                        <div className="h-8 w-px bg-white/10 hidden md:block" />
 
-                <nav className="hidden md:flex items-center gap-5 text-sm font-medium opacity-60">
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setCurrentView('menu')}
-                    className={`transition-colors flex items-center gap-2 ${currentView === 'menu' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
-                  >
-                    <Home size={14} />
-                    {t.menu}
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
-                    onClick={() => setCurrentView('profile')}
-                    className={`transition-colors flex items-center gap-2 ${currentView === 'profile' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
-                  >
-                    <UserIcon size={14} />
-                    {t.profile}
-                  </motion.button>
-                </nav>
-              </div>
-
-              <div className="flex items-center gap-2 md:gap-4 flex-grow max-w-md mx-2 md:mx-8">
-                <motion.div 
-                  whileHover={{ scale: 1.02 }}
-                  className="relative w-fit"
-                >
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40" size={16} />
-                  <input 
-                    type="text"
-                    placeholder={t.search}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full md:w-48 h-10 glass rounded-2xl pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all placeholder:opacity-20"
-                  />
-                </motion.div>
-                {weather && (
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="hidden lg:flex items-center gap-2 px-3 py-1.5 glass rounded-full"
-                  >
-                    {weather.isCold ? <div className="p-1 bg-blue-500/20 rounded-full"><Wind size={10} className="text-blue-400" /></div> : <div className="p-1 bg-orange-500/20 rounded-full"><Sun size={10} className="text-orange-400" /></div>}
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold leading-tight">{weather.temp}°C Duhok</span>
-                      <span className="text-[8px] opacity-40 leading-tight uppercase font-medium">{weather.condition}</span>
+                        <nav className="hidden md:flex items-center gap-5 text-sm font-medium opacity-60">
+                        <motion.button 
+                            whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
+                            onClick={() => setCurrentView('menu')}
+                            className={`transition-colors flex items-center gap-2 ${currentView === 'menu' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
+                        >
+                            <Home size={14} />
+                            {t.menu}
+                        </motion.button>
+                        <motion.button 
+                            whileHover={{ scale: 1.1, textShadow: "0 0 8px rgba(var(--text-color-rgb, 255, 255, 255), 0.5)" }}
+                            onClick={() => setCurrentView('profile')}
+                            className={`transition-colors flex items-center gap-2 ${currentView === 'profile' ? 'text-[var(--text-color)] opacity-100' : 'hover:text-[var(--text-color)]'}`}
+                        >
+                            <UserIcon size={14} />
+                            {t.profile}
+                        </motion.button>
+                        </nav>
                     </div>
-                  </motion.div>
                 )}
               </div>
 
-              <div className="flex items-center gap-2 md:gap-4">
-                <motion.button 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setIsInfoOpen(true)}
-                  className="hidden p-2.5 hover:bg-white/10 rounded-2xl transition-all text-white/60 hover:text-white"
-                  title="About Us"
-                >
-                  <Info size={20} />
-                </motion.button>
+              {currentView !== 'build-breakfast' && (
+                <>
+                    <div className="flex items-center gap-2 md:gap-4 flex-grow max-w-md mx-2 md:mx-8">
+                        <motion.div 
+                        whileHover={{ scale: 1.02 }}
+                        className="relative w-fit"
+                        >
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40" size={16} />
+                        <input 
+                            type="text"
+                            placeholder={t.search}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full md:w-48 h-10 glass rounded-2xl pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all placeholder:opacity-20"
+                        />
+                        </motion.div>
+                        {weather && (
+                        <motion.div 
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="hidden lg:flex items-center gap-2 px-3 py-1.5 glass rounded-full"
+                        >
+                            {weather.isCold ? <div className="p-1 bg-blue-500/20 rounded-full"><Wind size={10} className="text-blue-400" /></div> : <div className="p-1 bg-orange-500/20 rounded-full"><Sun size={10} className="text-orange-400" /></div>}
+                            <div className="flex flex-col">
+                            <span className="text-[10px] font-bold leading-tight">{weather.temp}°C Duhok</span>
+                            <span className="text-[8px] opacity-40 leading-tight uppercase font-medium">{weather.condition}</span>
+                            </div>
+                        </motion.div>
+                        )}
+                    </div>
 
-                <motion.button 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => {
-                    const modes: ('grid' | 'list' | 'minimal' | 'compact' | 'magazine')[] = ['grid', 'list', 'minimal', 'compact', 'magazine'];
-                    const nextIndex = (modes.indexOf(viewMode) + 1) % modes.length;
+                    <div className="flex items-center gap-2 md:gap-4">
+                        <motion.button 
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setIsInfoOpen(true)}
+                        className="hidden p-2.5 hover:bg-white/10 rounded-2xl transition-all text-white/60 hover:text-white"
+                        title="About Us"
+                        >
+                        <Info size={20} />
+                        </motion.button>
+
+                        <motion.button 
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => {
+                            const modes: ('grid' | 'list' | 'minimal' | 'compact' | 'magazine')[] = ['grid', 'list', 'minimal', 'compact', 'magazine'];
+                            const nextIndex = (modes.indexOf(viewMode) + 1) % modes.length;
                     setViewMode(modes[nextIndex]);
                   }}
                   className="hidden p-2.5 hover:bg-white/10 rounded-2xl transition-all relative group"
@@ -2350,7 +2358,9 @@ export default function App() {
                 >
                   <Menu size={20} className="group-hover:scale-110 transition-transform" />
                 </motion.button>
-              </div>
+                </div>
+                </>
+            )}
             </motion.header>
 
 
@@ -2374,12 +2384,13 @@ export default function App() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => {
+                        setCurrentView('menu');
                         setActiveMainCategory(main.name);
                         const firstSub = categories.find(c => c.main === main.name);
                         if (firstSub) setActiveCategory(firstSub.name);
                       }}
                       className={`px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${
-                        activeMainCategory === main.name
+                        activeMainCategory === main.name && currentView === 'menu'
                           ? 'bg-[var(--text-color)] text-[var(--bg-color)] shadow-lg'
                           : 'opacity-60 hover:opacity-100 hover:bg-[var(--text-color)]/10'
                       }`}
@@ -2408,6 +2419,24 @@ export default function App() {
                     </motion.button>
                   ))}
                 </nav>
+                
+                <nav className="glass rounded-full p-1 flex items-center justify-center shadow-lg shadow-[var(--text-color)]/5 w-auto">
+                    <AIGradientBorder className="rounded-full">
+                        <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setCurrentView('build-breakfast')}
+                        className={`px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${
+                            currentView === 'build-breakfast'
+                            ? 'bg-[var(--accent-color)] text-white shadow-lg'
+                            : 'opacity-60 hover:opacity-100 hover:bg-[var(--text-color)]/10'
+                        }`}
+                        >
+                        <Utensils size={10} />
+                        Build your own breakfast
+                        </motion.button>
+                    </AIGradientBorder>
+                </nav>
 
                 {/* Quick Filters Row */}
                 <nav className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full">
@@ -2431,7 +2460,7 @@ export default function App() {
               </motion.div>
             )}
 
-            <main className="pt-60 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
+            <main className="pt-80 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
 
               <AnimatePresence mode="wait">
                 {currentView === 'feedback' ? (
@@ -2557,6 +2586,8 @@ export default function App() {
                       </form>
                     </div>
                   </motion.div>
+                ) : currentView === 'build-breakfast' ? (
+                  <BuildBreakfastView />
                 ) : currentView === 'profile' ? (
                   <motion.div
                     key="profile-view"

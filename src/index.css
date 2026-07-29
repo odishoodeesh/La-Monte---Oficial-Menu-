@@ -102,6 +102,13 @@
   .text-glow {
     text-shadow: 0 0 20px rgba(var(--text-color-rgb, 255, 255, 255), var(--glow-opacity));
   }
+  .ai-glow-spill-mask {
+    mask-image: radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      transparent 50%,
+      black 100%
+    );
+  }
 }
 
 .atmosphere-bg {

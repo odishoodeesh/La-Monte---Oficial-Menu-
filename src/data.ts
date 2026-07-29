@@ -1657,8 +1657,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '6,000 IQD',
     category: 'Toasts',
     mainCategory: 'Food',
-    image: 'https://i.ibb.co/ZR9pCX5J/la-monte-toast-cheese.png',
-    thumbnail: 'https://i.ibb.co/WNC415Z3/la-monte-toast-cheese.png',
+    image: 'https://i.ibb.co/6RNy5pCd/photo-2026-07-29-12-15-37.jpg',
+    thumbnail: 'https://i.ibb.co/Kjm5HQv1/photo-2026-07-29-12-15-37.jpg',
     description: 'Toasted bread with cheese.',
     calories: '450 kcal'
   },
@@ -1668,8 +1668,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '6,000 IQD',
     category: 'Toasts',
     mainCategory: 'Food',
-    image: 'https://i.ibb.co/6d0049r/la-monte-avocado-toast.png',
-    thumbnail: 'https://i.ibb.co/79ttGMj/la-monte-avocado-toast.png',
+    image: 'https://i.ibb.co/vCNHhsrx/photo-2026-07-29-12-13-47.jpg',
+    thumbnail: 'https://i.ibb.co/GfZ09s1v/photo-2026-07-29-12-13-47.jpg',
     description: 'Toasted bread with avocado.',
     calories: '380 kcal'
   },
@@ -1679,20 +1679,20 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '6,000 IQD',
     category: 'Toasts',
     mainCategory: 'Food',
-    image: 'https://i.ibb.co/MkbXjsr0/la-monte-tuna-toast.png',
-    thumbnail: 'https://i.ibb.co/chPmp10n/la-monte-tuna-toast.png',
+    image: 'https://i.ibb.co/23Vc8Pn6/TUNA-TOAST.png',
+    thumbnail: 'https://i.ibb.co/s9xs5QmP/TUNA-TOAST.png',
     description: 'Toasted bread with tuna.',
     calories: '420 kcal'
   },
   {
     id: 'tst4',
-    name: 'SMOKED TURKEY SANDWICH',
+    name: 'SMOKED TURKEY TOAST',
     price: '6,000 IQD',
     category: 'Toasts',
     mainCategory: 'Food',
-    image: 'https://i.ibb.co/pBSMWtJX/la-monte-smoked-turkey.png',
-    thumbnail: 'https://i.ibb.co/KpJfNMFy/la-monte-smoked-turkey.png',
-    description: 'Smoked turkey sandwich.',
+    image: 'https://i.ibb.co/HpVLk1xK/SMOKED-TURKEY-TOAST.png',
+    thumbnail: 'https://i.ibb.co/mFGrM1XR/SMOKED-TURKEY-TOAST.png',
+    description: 'Smoked turkey toast.',
     calories: '480 kcal'
   },
 
