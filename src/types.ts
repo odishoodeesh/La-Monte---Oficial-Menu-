@@ -25,7 +25,8 @@ export type Category =
   | 'Hot Chocolate'
   | 'Sweets & Cake' 
   | 'Toasts'
-  | 'COOKIES';
+  | 'COOKIES'
+  | 'Breakfast';
 
 export interface MenuItem {
   id: string;

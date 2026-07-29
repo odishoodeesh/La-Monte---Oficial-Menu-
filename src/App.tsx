@@ -1052,6 +1052,34 @@ export default function App() {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const subCategoriesRef = React.useRef<HTMLDivElement | null>(null);
 
+  const categories: { name: Category; icon: any; main: MainCategory }[] = [
+    { name: 'Hot Drinks', icon: Coffee, main: 'Drinks' },
+    { name: 'Cold Drinks', icon: GlassWater, main: 'Drinks' },
+    { name: 'Cold Brew', icon: Coffee, main: 'Drinks' },
+    { name: 'Coffee Frappe', icon: Coffee, main: 'Drinks' },
+    { name: 'Mojito', icon: Wind, main: 'Drinks' },
+    { name: 'Smoothies', icon: Wind, main: 'Drinks' },
+    { name: 'Chia Seeds', icon: Leaf, main: 'Drinks' },
+    { name: 'Milkshake', icon: IceCream, main: 'Drinks' },
+    { name: 'Red Bull', icon: Zap, main: 'Drinks' },
+    { name: 'Refreshing Drinks', icon: Wind, main: 'Drinks' },
+    { name: 'Fresh Juice', icon: Droplets, main: 'Drinks' },
+    { name: 'Detox', icon: Leaf, main: 'Drinks' },
+    { name: 'Iced Tea', icon: Coffee, main: 'Drinks' },
+    { name: 'Tea', icon: Coffee, main: 'Drinks' },
+    { name: 'Milk', icon: GlassWater, main: 'Drinks' },
+    { name: 'Hot Chocolate', icon: Coffee, main: 'Drinks' },
+    { name: 'Water', icon: Droplets, main: 'Drinks' },
+    { name: 'Matcha', icon: Leaf, main: 'Drinks' },
+    { name: 'Shisha', icon: Flame, main: 'Shisha' },
+    { name: 'Sweets & Cake', icon: Cookie, main: 'Food' },
+    { name: 'Toasts', icon: Sandwich, main: 'Food' },
+    { name: 'COOKIES', icon: Cookie, main: 'Food' },
+    { name: 'Breakfast', icon: Coffee, main: 'Food' },
+  ];
+
+  const filteredCategories = categories.filter(cat => cat.main === activeMainCategory);
+
   // Auto scroll sub-categories bar slowly back and forth
   useEffect(() => {
     // If intro screen is still showing, wait
@@ -1061,7 +1089,7 @@ export default function App() {
     if (!container) return;
 
     let animationFrameId: number;
-    const scrollSpeed = 0.25; // extremely slow and smooth scroll speed (pixels per frame)
+    const scrollSpeed = 0.5; // slow and smooth scroll speed (pixels per frame)
     let direction = 1; // 1 for scrolling to the right (items scroll left), -1 for scrolling to the left
 
     let isHovered = false;
@@ -1110,7 +1138,7 @@ export default function App() {
         container.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [activeMainCategory, currentView, showIntro]);
+  }, [activeMainCategory, currentView, showIntro, filteredCategories]);
 
   // Intro Screen Auto Dismiss
   useEffect(() => {
@@ -2103,32 +2131,7 @@ export default function App() {
     { name: 'Shisha', icon: Flame },
   ];
 
-  const categories: { name: Category; icon: any; main: MainCategory }[] = [
-    { name: 'Hot Drinks', icon: Coffee, main: 'Drinks' },
-    { name: 'Cold Drinks', icon: GlassWater, main: 'Drinks' },
-    { name: 'Cold Brew', icon: Coffee, main: 'Drinks' },
-    { name: 'Coffee Frappe', icon: Coffee, main: 'Drinks' },
-    { name: 'Mojito', icon: Wind, main: 'Drinks' },
-    { name: 'Smoothies', icon: Wind, main: 'Drinks' },
-    { name: 'Chia Seeds', icon: Leaf, main: 'Drinks' },
-    { name: 'Milkshake', icon: IceCream, main: 'Drinks' },
-    { name: 'Red Bull', icon: Zap, main: 'Drinks' },
-    { name: 'Refreshing Drinks', icon: Wind, main: 'Drinks' },
-    { name: 'Fresh Juice', icon: Droplets, main: 'Drinks' },
-    { name: 'Detox', icon: Leaf, main: 'Drinks' },
-    { name: 'Iced Tea', icon: Coffee, main: 'Drinks' },
-    { name: 'Tea', icon: Coffee, main: 'Drinks' },
-    { name: 'Milk', icon: GlassWater, main: 'Drinks' },
-    { name: 'Hot Chocolate', icon: Coffee, main: 'Drinks' },
-    { name: 'Water', icon: Droplets, main: 'Drinks' },
-    { name: 'Matcha', icon: Leaf, main: 'Drinks' },
-    { name: 'Shisha', icon: Flame, main: 'Shisha' },
-    { name: 'Sweets & Cake', icon: Cookie, main: 'Food' },
-    { name: 'Toasts', icon: Sandwich, main: 'Food' },
-    { name: 'COOKIES', icon: Cookie, main: 'Food' },
-  ];
 
-  const filteredCategories = categories.filter(cat => cat.main === activeMainCategory);
 
   const logoUrl = "https://i.ibb.co/995h3pcg/logo.png";
 
@@ -2402,7 +2405,7 @@ export default function App() {
                 </nav>
 
                 {/* Sub Categories */}
-                <nav ref={subCategoriesRef} className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full w-[337.5px] h-[35.9141px]">
+                <nav ref={subCategoriesRef} className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full h-[35.9141px]">
                   {filteredCategories.map((cat) => (
                     <motion.button
                       key={cat.name}
