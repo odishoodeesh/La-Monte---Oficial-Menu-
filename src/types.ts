@@ -46,6 +46,7 @@ export interface MenuItem {
   isSeasonal?: boolean;
   isRecommended?: boolean;
   isCombination?: boolean;
+  comboItems?: MenuItem[];
 }
 
 export interface CartItem extends MenuItem {

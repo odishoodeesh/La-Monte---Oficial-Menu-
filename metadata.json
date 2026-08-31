@@ -1,5 +1,8 @@
 {
   "name": "Remix: MAin:  LA MONTE (OFFICIAL MENU)",
-  "description": "A premium digital menu and ordering experience for La Monte Restaurant \u0026 Cafe.",
-  "requestFramePermissions": []
+  "description": "A premium digital menu and ordering experience for La Monte Restaurant \u0026 Cafe with daily auto-combinations and online ordering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

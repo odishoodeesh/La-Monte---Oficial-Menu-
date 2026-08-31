@@ -1703,8 +1703,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: '8,000 IQD',
     category: 'Breakfast',
     mainCategory: 'Food',
-    image: 'https://i.ibb.co/5xf9RbXL/breakfast-psd.png',
-    thumbnail: 'https://i.ibb.co/wrxLz5Z4/breakfast-psd.png',
+    image: 'https://i.ibb.co/XZhqkGxY/BREAKFAST.png',
+    thumbnail: 'https://i.ibb.co/Y7zxTVB0/BREAKFAST.png',
     description: 'La Monte special breakfast.',
     calories: '600 kcal'
   },

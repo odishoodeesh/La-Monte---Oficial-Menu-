@@ -22,6 +22,7 @@ import BuildBreakfastView from './components/BuildBreakfastView';
 import { User } from '@supabase/supabase-js';
 import { Category, MenuItem, CartItem, MainCategory } from './types';
 import { MENU_ITEMS } from './data';
+import { generateDailyCombinations } from './utils/combinations';
 import { fetchDuhokWeather, WeatherData } from './services/weatherService';
 
 type View = 'menu' | 'profile' | 'reservation' | 'feedback' | 'build-breakfast';
@@ -226,33 +227,72 @@ const MenuItemCard = memo(({
     >
       {viewMode === 'grid' && (
         <>
-          <div className="relative w-full aspect-square overflow-hidden bg-black/5 rounded-2xl md:rounded-3xl p-4">
-            <motion.button 
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.85 }}
-              onClick={(e) => toggleFavorite(item.id, e)}
-              className="absolute top-4 right-4 z-30 p-2 glass rounded-full hover:bg-[var(--text-color)]/10 transition-all"
-            >
-              <Heart 
-                size={14} 
-                className={favorites.includes(item.id) ? 'text-red-500 fill-red-500' : 'text-[var(--text-color)]'} 
-              />
-            </motion.button>
+          {item.isCombination && item.comboItems && item.comboItems.length === 3 ? (
+            <div className="relative w-full aspect-square overflow-hidden bg-black/10 rounded-2xl md:rounded-3xl p-2.5 flex flex-col justify-between">
+              <motion.button 
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.85 }}
+                onClick={(e) => toggleFavorite(item.id, e)}
+                className="absolute top-3.5 right-3.5 z-30 p-1.5 glass rounded-full hover:bg-[var(--text-color)]/10 transition-all"
+              >
+                <Heart 
+                  size={13} 
+                  className={favorites.includes(item.id) ? 'text-red-500 fill-red-500' : 'text-[var(--text-color)]'} 
+                />
+              </motion.button>
 
-            {item.rank && (
-              <div className="absolute top-4 left-4 z-20 px-2 py-0.5 glass rounded-full text-[8px] font-bold uppercase tracking-widest text-[var(--text-color)]/80">
-                {item.rank}
+              <div className="absolute top-3.5 left-3.5 z-20 px-2.5 py-1 bg-[var(--accent-color)]/20 backdrop-blur-md text-[var(--accent-color)] border border-[var(--accent-color)]/30 rounded-full text-[7.5px] font-black uppercase tracking-wider shadow-md">
+                {item.rank || 'DAILY TRIO'}
               </div>
-            )}
 
-            <img 
-              src={item.thumbnail || item.image} 
-              alt={getLabel(item, 'name', language)}
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
-            />
-          </div>
+              <div className="grid grid-cols-3 gap-1.5 w-full h-full pt-7 pb-0.5">
+                {item.comboItems.map((cItem, cIdx) => (
+                  <div key={cItem.id + cIdx} className="relative rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 flex flex-col items-center justify-between">
+                    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                      <img 
+                        src={cItem.thumbnail || cItem.image} 
+                        alt={getLabel(cItem, 'name', language)}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <span className="text-[7px] font-bold uppercase tracking-wider text-center text-white/80 truncate w-full px-0.5">
+                      {cIdx === 0 ? '🥪 Food' : cIdx === 1 ? '☕ Drink' : '🍰 Sweet'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full aspect-square overflow-hidden bg-black/5 rounded-2xl md:rounded-3xl p-4">
+              <motion.button 
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.85 }}
+                onClick={(e) => toggleFavorite(item.id, e)}
+                className="absolute top-4 right-4 z-30 p-2 glass rounded-full hover:bg-[var(--text-color)]/10 transition-all"
+              >
+                <Heart 
+                  size={14} 
+                  className={favorites.includes(item.id) ? 'text-red-500 fill-red-500' : 'text-[var(--text-color)]'} 
+                />
+              </motion.button>
+
+              {item.rank && (
+                <div className="absolute top-4 left-4 z-20 px-2 py-0.5 glass rounded-full text-[8px] font-bold uppercase tracking-widest text-[var(--text-color)]/80">
+                  {item.rank}
+                </div>
+              )}
+
+              <img 
+                src={item.thumbnail || item.image} 
+                alt={getLabel(item, 'name', language)}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
+              />
+            </div>
+          )}
 
           <div className="p-4 flex-grow flex flex-col justify-between">
             <div className="flex flex-col gap-1">
@@ -274,14 +314,30 @@ const MenuItemCard = memo(({
 
       {viewMode === 'list' && (
         <>
-          <div className="w-32 h-full flex-shrink-0 bg-black/5 p-4">
-            <img 
-              src={item.thumbnail || item.image} 
-              alt={getLabel(item, 'name', language)}
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-contain"
-            />
+          <div className="w-32 h-full flex-shrink-0 bg-black/5 p-2 flex items-center justify-center">
+            {item.isCombination && item.comboItems && item.comboItems.length === 3 ? (
+              <div className="grid grid-cols-3 gap-1 w-full h-full">
+                {item.comboItems.map((cItem, cIdx) => (
+                  <div key={cItem.id + cIdx} className="bg-white/5 rounded-lg p-0.5 flex items-center justify-center overflow-hidden">
+                    <img 
+                      src={cItem.thumbnail || cItem.image} 
+                      alt={getLabel(cItem, 'name', language)}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <img 
+                src={item.thumbnail || item.image} 
+                alt={getLabel(item, 'name', language)}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-contain"
+              />
+            )}
           </div>
           <div className="flex-grow p-4 flex flex-col justify-center">
             <div className="flex justify-between items-start mb-1">
@@ -353,21 +409,40 @@ const MenuItemCard = memo(({
       {viewMode === 'magazine' && (
         <>
           <div className="relative w-full h-[400px] flex items-center justify-center p-8 bg-black/5">
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="relative w-full max-w-sm aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10"
-            >
-              <img 
-                src={item.thumbnail || item.image} 
-                alt={item.name}
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000"
-              />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-inner">
-                <Maximize2 size={32} className="text-white drop-shadow-lg" />
+            {item.isCombination && item.comboItems && item.comboItems.length === 3 ? (
+              <div className="grid grid-cols-3 gap-3 w-full max-w-md aspect-square rounded-[3rem] overflow-hidden p-4 glass border-4 border-white/10 shadow-2xl">
+                {item.comboItems.map((cItem, cIdx) => (
+                  <div key={cItem.id + cIdx} className="bg-white/5 rounded-2xl p-2 flex flex-col items-center justify-between">
+                    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                      <img 
+                        src={cItem.thumbnail || cItem.image} 
+                        alt={getLabel(cItem, 'name', language)}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-white/80 mt-1 text-center">
+                      {cIdx === 0 ? '🥪 Food' : cIdx === 1 ? '☕ Drink' : '🍰 Sweet'}
+                    </span>
+                  </div>
+                ))}
               </div>
-            </motion.div>
+            ) : (
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="relative w-full max-w-sm aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10"
+              >
+                <img 
+                  src={item.thumbnail || item.image} 
+                  alt={item.name}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000"
+                />
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-inner">
+                  <Maximize2 size={32} className="text-white drop-shadow-lg" />
+                </div>
+              </motion.div>
+            )}
           </div>
           
           <div className="p-8 flex flex-col justify-between flex-grow">
@@ -375,12 +450,12 @@ const MenuItemCard = memo(({
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] opacity-60 mb-2 block">
                 {item.category}
               </span>
-              <h3 className="text-3xl sm:text-4xl font-serif italic text-[var(--text-color)] leading-tight">{item.name}</h3>
+              <h3 className="text-3xl sm:text-4xl font-serif italic text-[var(--text-color)] leading-tight">{getLabel(item, 'name', language)}</h3>
             </div>
 
             <div className="flex justify-between items-end">
               <div className="max-w-[70%]">
-                <p className="text-sm opacity-60 line-clamp-2 font-light mb-4">{item.description}</p>
+                <p className="text-sm opacity-60 line-clamp-2 font-light mb-4">{getLabel(item, 'description', language)}</p>
                 <div className="flex items-center gap-4">
                   <span className="text-2xl font-medium">{item.price}</span>
                   <div className="h-px w-12 bg-[var(--text-color)]/20" />
@@ -1079,66 +1154,6 @@ export default function App() {
   ];
 
   const filteredCategories = categories.filter(cat => cat.main === activeMainCategory);
-
-  // Auto scroll sub-categories bar slowly back and forth
-  useEffect(() => {
-    // If intro screen is still showing, wait
-    if (showIntro) return;
-
-    const container = subCategoriesRef.current;
-    if (!container) return;
-
-    let animationFrameId: number;
-    const scrollSpeed = 0.5; // slow and smooth scroll speed (pixels per frame)
-    let direction = 1; // 1 for scrolling to the right (items scroll left), -1 for scrolling to the left
-
-    let isHovered = false;
-    let isTouching = false;
-
-    const handleMouseEnter = () => { isHovered = true; };
-    const handleMouseLeave = () => { isHovered = false; };
-    const handleTouchStart = () => { isTouching = true; };
-    const handleTouchEnd = () => { isTouching = false; };
-
-    container.addEventListener('mouseenter', handleMouseEnter);
-    container.addEventListener('mouseleave', handleMouseLeave);
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchend', handleTouchEnd);
-
-    // Initial position
-    container.scrollLeft = 0;
-
-    const startScroll = () => {
-      if (container && !isHovered && !isTouching) {
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        if (maxScroll > 1) {
-          container.scrollLeft += scrollSpeed * direction;
-          if (container.scrollLeft >= maxScroll - 1) {
-            direction = -1; // change direction to scroll left
-          } else if (container.scrollLeft <= 1) {
-            direction = 1; // change direction to scroll right
-          }
-        }
-      }
-      animationFrameId = requestAnimationFrame(startScroll);
-    };
-
-    // Small delay before starting auto-scroll so user can see it static initially
-    const delayTimer = setTimeout(() => {
-      animationFrameId = requestAnimationFrame(startScroll);
-    }, 1500);
-
-    return () => {
-      clearTimeout(delayTimer);
-      cancelAnimationFrame(animationFrameId);
-      if (container) {
-        container.removeEventListener('mouseenter', handleMouseEnter);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchend', handleTouchEnd);
-      }
-    };
-  }, [activeMainCategory, currentView, showIntro, filteredCategories]);
 
   // Intro Screen Auto Dismiss
   useEffect(() => {
@@ -1843,32 +1858,53 @@ export default function App() {
     }
   }, [cart, favorites, orderHistory, theme, viewMode, isSyncing]);
 
+  // All menu items including daily auto-combinations
+  const allMenuItems = useMemo(() => {
+    const combinations = generateDailyCombinations(MENU_ITEMS);
+    return [...MENU_ITEMS, ...combinations];
+  }, []);
+
   // Memoized Filtering Logic
   const filteredItems = useMemo(() => {
-    const search = deferredSearchQuery.toLowerCase();
+    const search = deferredSearchQuery.toLowerCase().trim();
     
-    return MENU_ITEMS.filter(item => {
-      const matchesSearch = item.name.toLowerCase().includes(search) || 
-                           item.description.toLowerCase().includes(search);
+    return allMenuItems.filter(item => {
+      const matchesSearch = !search || 
+        (item.name && item.name.toLowerCase().includes(search)) || 
+        (item.description && item.description.toLowerCase().includes(search)) ||
+        (item.nameKu && item.nameKu.toLowerCase().includes(search)) ||
+        (item.nameAr && item.nameAr.toLowerCase().includes(search)) ||
+        (item.descKu && item.descKu.toLowerCase().includes(search)) ||
+        (item.descAr && item.descAr.toLowerCase().includes(search)) ||
+        (item.category && item.category.toLowerCase().includes(search)) ||
+        (item.mainCategory && item.mainCategory.toLowerCase().includes(search));
       
+      // When searching, search all items across all categories regardless of active category
+      if (search) {
+        return matchesSearch;
+      }
+
       if (currentView === 'favorites') {
-        return favorites.includes(item.id) && matchesSearch;
+        return favorites.includes(item.id);
       }
 
       if (activeQuickFilter === 'Recommended') {
-        return recommendedIds.includes(item.id) && matchesSearch;
+        return recommendedIds.includes(item.id);
+      }
+
+      if (activeQuickFilter === 'Combinations') {
+        return !!item.isCombination;
       }
 
       const matchesQuickFilter = activeQuickFilter === 'All' ||
-        (activeQuickFilter === 'Seasonal' && item.isSeasonal) ||
-        (activeQuickFilter === 'Combinations' && item.isCombination);
+        (activeQuickFilter === 'Seasonal' && item.isSeasonal);
       
       return item.mainCategory === activeMainCategory && 
              item.category === activeCategory && 
-             matchesSearch && 
-             matchesQuickFilter;
+             matchesQuickFilter &&
+             !item.isCombination;
     });
-  }, [deferredSearchQuery, currentView, favorites, activeMainCategory, activeCategory, activeQuickFilter, recommendedIds]);
+  }, [allMenuItems, deferredSearchQuery, currentView, favorites, activeMainCategory, activeCategory, activeQuickFilter, recommendedIds]);
 
   const addToCart = useCallback((item: MenuItem, note: string = '', milkOpt: string = 'none') => {
     setCart(prev => {
@@ -2210,6 +2246,7 @@ export default function App() {
             <div className="atmosphere-bg" />
             
             {/* Top Navigation Bar */}
+            {currentView !== 'build-breakfast' && (
             <motion.header 
               animate={{ 
                 y: showBars ? 0 : -120,
@@ -2272,8 +2309,17 @@ export default function App() {
                             placeholder={t.search}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full md:w-48 h-10 glass rounded-2xl pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all placeholder:opacity-20"
+                            className="w-full md:w-48 h-10 glass rounded-2xl pl-11 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]/20 transition-all placeholder:opacity-20"
                         />
+                        {searchQuery && (
+                          <button
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 transition-opacity p-0.5"
+                            title="Clear search"
+                          >
+                            <X size={14} />
+                          </button>
+                        )}
                         </motion.div>
                         {weather && (
                         <motion.div 
@@ -2365,6 +2411,7 @@ export default function App() {
                 </>
             )}
             </motion.header>
+            )}
 
 
 
@@ -2423,6 +2470,8 @@ export default function App() {
                   ))}
                 </nav>
                 
+                {/* Build your own breakfast (Hidden for now) */}
+                {/*
                 <nav className="glass rounded-full p-1 flex items-center justify-center shadow-lg shadow-[var(--text-color)]/5 w-auto">
                     <AIGradientBorder className="rounded-full">
                         <motion.button
@@ -2440,6 +2489,7 @@ export default function App() {
                         </motion.button>
                     </AIGradientBorder>
                 </nav>
+                */}
 
                 {/* Quick Filters Row */}
                 <nav className="glass rounded-full p-1 flex items-center gap-1 shadow-lg shadow-[var(--text-color)]/5 overflow-x-auto no-scrollbar max-w-full">
@@ -2463,7 +2513,7 @@ export default function App() {
               </motion.div>
             )}
 
-            <main className="pt-80 pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]">
+            <main className={`${currentView === 'build-breakfast' ? 'pt-0' : 'pt-80'} pb-32 px-4 max-w-7xl mx-auto min-h-[80vh]`}>
 
               <AnimatePresence mode="wait">
                 {currentView === 'feedback' ? (
@@ -2590,7 +2640,7 @@ export default function App() {
                     </div>
                   </motion.div>
                 ) : currentView === 'build-breakfast' ? (
-                  <BuildBreakfastView />
+                  <BuildBreakfastView onNavigate={setCurrentView} />
                 ) : currentView === 'profile' ? (
                   <motion.div
                     key="profile-view"
@@ -2819,19 +2869,23 @@ export default function App() {
                     <div className="mb-14 text-center lg:text-left flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                        <div className="space-y-2">
                         <motion.h2 
-                          key={activeCategory}
+                          key={deferredSearchQuery.trim() ? 'search-results' : activeCategory}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           className="text-4xl md:text-5xl font-serif italic text-glow"
                         >
-                          {activeQuickFilter === 'Recommended' 
-                              ? t.recommended 
-                              : (t.categories[activeCategory] || activeCategory)}
+                          {deferredSearchQuery.trim()
+                              ? `"${searchQuery}"`
+                              : activeQuickFilter === 'Recommended' 
+                                ? t.recommended 
+                                : (t.categories[activeCategory] || activeCategory)}
                         </motion.h2>
                         <p className="opacity-40 text-xs tracking-[0.4em] uppercase font-black">
-                          {activeQuickFilter === 'Recommended' 
-                            ? `${t.weather_picks} ${weather ? `(${weather.temp}°C)` : ''}`
-                            : `${t.categories[activeMainCategory] || activeMainCategory} / ${filteredItems.length} ${t.items}`}
+                          {deferredSearchQuery.trim()
+                            ? `${filteredItems.length} ${t.items}`
+                            : activeQuickFilter === 'Recommended' 
+                              ? `${t.weather_picks} ${weather ? `(${weather.temp}°C)` : ''}`
+                              : `${t.categories[activeMainCategory] || activeMainCategory} / ${filteredItems.length} ${t.items}`}
                         </p>
                       </div>
                     </div>
@@ -2942,9 +2996,33 @@ export default function App() {
                         <h2 className="text-xl md:text-2xl font-serif italic text-glow">{getLabel(selectedItem, 'name', language)}</h2>
                       </div>
                       
-                      <p className="text-xs md:text-sm opacity-60 leading-relaxed mb-4 font-light max-w-md mx-auto">
-                        {getLabel(selectedItem, 'description', language)}
-                      </p>
+                      {selectedItem.isCombination && selectedItem.comboItems ? (
+                        <div className="w-full space-y-2.5 mb-5 text-left bg-white/5 p-4 rounded-2xl border border-white/10 shadow-inner">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-color)] mb-1">
+                            {language === 'en' ? 'Trio Combination Items:' : language === 'ar' ? 'مكونات التوليفة الثلاثية:' : 'پێکهاتەکانی تێکەڵەکە:'}
+                          </p>
+                          {selectedItem.comboItems.map((cItem, cIdx) => (
+                            <div key={cItem.id + cIdx} className="flex items-center gap-3 bg-black/10 p-2.5 rounded-xl border border-white/5">
+                              <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 flex items-center justify-center p-1">
+                                <img src={cItem.thumbnail || cItem.image} alt="" className="max-h-full max-w-full object-contain" referrerPolicy="no-referrer" />
+                              </div>
+                              <div className="flex-grow flex justify-between items-center">
+                                <div className="flex flex-col">
+                                  <span className="text-[9px] font-bold uppercase tracking-wider opacity-50">
+                                    {cIdx === 0 ? '🥪 Food' : cIdx === 1 ? '☕ Drink' : '🍰 Sweet'}
+                                  </span>
+                                  <span className="text-xs font-medium text-[var(--text-color)]">{getLabel(cItem, 'name', language)}</span>
+                                </div>
+                                <span className="text-xs font-medium opacity-70">{cItem.price}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs md:text-sm opacity-60 leading-relaxed mb-4 font-light max-w-md mx-auto whitespace-pre-line">
+                          {getLabel(selectedItem, 'description', language)}
+                        </p>
+                      )}
                       
                       <div className="flex items-center justify-between mb-4 px-2">
                         <span className="text-lg md:text-xl font-medium">
@@ -3138,6 +3216,17 @@ export default function App() {
                                   </p>
                                 );
                               })()}
+
+                              {item.isCombination && item.comboItems && (
+                                <div className="mb-2 space-y-1 bg-white/5 p-2 rounded-xl border border-white/10 text-[10px]">
+                                  {item.comboItems.map((cItem, cIdx) => (
+                                    <div key={cItem.id + cIdx} className="flex justify-between items-center opacity-70">
+                                      <span className="truncate max-w-[140px]">{cIdx === 0 ? '🥪' : cIdx === 1 ? '☕' : '🍰'} {getLabel(cItem, 'name', language)}</span>
+                                      <span className="text-[9px] opacity-60 flex-shrink-0">{cItem.price}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
 
                               {item.selectedMilk && item.selectedMilk !== 'none' && (
                                 <div className="mb-2 px-2 py-1 bg-[var(--text-color)]/5 border border-[var(--text-color)]/5 rounded-lg inline-block">
@@ -3865,7 +3954,7 @@ export default function App() {
             )}
 
             {/* TikTok Floating Toggle Button (Stacked above Instagram on Left Side) */}
-            {!showIntro && (
+            {!showIntro && currentView !== 'build-breakfast' && (
               <motion.a
                 href="https://www.tiktok.com/@lamonte_coffeeshop"
                 target="_blank"
@@ -3884,7 +3973,7 @@ export default function App() {
             )}
 
             {/* Instagram Floating Toggle Button (Stacked above Spotify on Left Side) */}
-            {!showIntro && (
+            {!showIntro && currentView !== 'build-breakfast' && (
               <motion.a
                 href="https://www.instagram.com/lamonte_coffeeshop/"
                 target="_blank"
@@ -3901,7 +3990,7 @@ export default function App() {
             )}
 
             {/* Spotify Floating Toggle Button (Left Side) */}
-            {!showIntro && (
+            {!showIntro && currentView !== 'build-breakfast' && (
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
