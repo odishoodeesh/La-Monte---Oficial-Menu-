@@ -1649,6 +1649,21 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Decadent Biscoff glaze layered with soft cookie butter flavored sponge.',
     calories: '460 kcal'
   },
+  {
+    id: 'sw10',
+    name: 'PB&J',
+    nameAr: 'بي بي أند جي',
+    nameKu: 'پی بی ئەند جەی',
+    price: '6,000 IQD',
+    category: 'Sweets & Cake',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/Z6nrVjJz/file-0000000005e081f4946145b43b4810fa.png',
+    thumbnail: 'https://i.ibb.co/tM764Ghp/file-0000000005e081f4946145b43b4810fa.png',
+    description: 'Classic peanut butter and jelly with rich nutty spread and sweet fruit jam.',
+    descAr: 'شطيرة زبدة الفول السوداني والمربى اللذيذة.',
+    descKu: 'تۆستی کەرەی فستقی سودانی و مرەبای شیرین.',
+    calories: '420 kcal'
+  },
 
   // TOASTS
   {
@@ -1707,6 +1722,21 @@ export const MENU_ITEMS: MenuItem[] = [
     thumbnail: 'https://i.ibb.co/Y7zxTVB0/BREAKFAST.png',
     description: 'La Monte special breakfast.',
     calories: '600 kcal'
+  },
+  {
+    id: 'brk2',
+    name: 'Golden Egg Avo',
+    nameAr: 'غولدن إيغ أفو',
+    nameKu: 'گۆڵدن ئێگ ئاڤۆ',
+    price: '8,000 IQD',
+    category: 'Breakfast',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/7dngZ01Y/file-00000000e26c8210b58de4f6c4eff725.jpg',
+    thumbnail: 'https://i.ibb.co/Tx4K7Ngv/file-00000000e26c8210b58de4f6c4eff725.jpg',
+    description: 'Crispy toasted bread topped with rich mashed avocado and golden-cooked eggs.',
+    descAr: 'خبز محمص مقرمش مع الأفوكادو المهروس الغني والبيض الذهبي اللذيذ.',
+    descKu: 'نانی برژاوی کریسپی لەگەڵ ئاڤۆکادۆی هاڕراو و هێلکەی زێڕینی بەتام.',
+    calories: '490 kcal'
   },
 
   // COOKIES
