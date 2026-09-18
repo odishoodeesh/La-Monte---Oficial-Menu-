@@ -1710,6 +1710,21 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Smoked turkey toast.',
     calories: '480 kcal'
   },
+  {
+    id: 'tst5',
+    name: 'Green Olive Toast',
+    nameAr: 'توست الزيتون الأخضر',
+    nameKu: 'تۆستی زەیتوونی سەوز',
+    price: '6,000 IQD',
+    category: 'Toasts',
+    mainCategory: 'Food',
+    image: 'https://i.ibb.co/4ZC7dYmK/file-00000000aad481f480755c3157938752.png',
+    thumbnail: 'https://i.ibb.co/4ZC7dYmK/file-00000000aad481f480755c3157938752.png',
+    description: 'Toasted artisan bread topped with savory green olive tapenade and seasonings.',
+    descAr: 'توست مقرمش مع خلطة الزيتون الأخضر الشهية والتوابل المميزة.',
+    descKu: 'تۆستی برژاو لەگەڵ زەیتوونی سەوزی بەتام و بەهاراتی تایبەت.',
+    calories: '410 kcal'
+  },
 
   // BREAKFAST
   {
